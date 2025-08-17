@@ -13,11 +13,11 @@ namespace PIV_PF_JorgeIsaacLópezV.Models.ViewModels
         public int Id_Usuario { get; set; }
 
         [Required(ErrorMessage = "La identificacion es Obligatoria")]
-        [Display (Name = "Identificacion")]
+        [Display(Name = "Identificacion")]
         public int Identificacion { get; set; }
 
         [Required(ErrorMessage = "El nombre es obligatorio")]
-        [Display (Name = "Nombre")]
+        [Display(Name = "Nombre")]
         [RegularExpression(@"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$", ErrorMessage = "El nombre no debe contener números")]
         public string Nombre { get; set; }
 
@@ -40,7 +40,7 @@ namespace PIV_PF_JorgeIsaacLópezV.Models.ViewModels
         public int Id_Estado { get; set; }
 
         [Display(Name = "Nombre Completo")]
-        public string NombreCompleto 
+        public string NombreCompleto
         {
             get { return $"{Nombre} {Apellidos}"; }
         }
@@ -55,10 +55,22 @@ namespace PIV_PF_JorgeIsaacLópezV.Models.ViewModels
 
     }
 
-    public class ListaUsuarios 
+    public class ListaUsuarios
     {
         public List<Usuario> Usuarios { get; set; }
         public string Mensaje { get; set; }
         public string TipoMensaje { get; set; }
+
+        public int? FiltroRolSeleccionado { get; set; }
+        public List<SelectListItem> RolesAdministrativos { get; set; }
+
+
+        public ListaUsuarios() 
+        {
+            Usuarios = new List<Usuario>();
+            RolesAdministrativos = new List<SelectListItem>();
+        }
     }
 }
+
+    

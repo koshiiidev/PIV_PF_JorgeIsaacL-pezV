@@ -545,7 +545,6 @@
 
 <script>
     $(document).ready(function () {
-        // Convertir a mayúsculas el primer caracter de nombre y apellidos
         $('#Nombre, #Apellidos').on('input', function () {
             var value = $(this).val();
             if (value.length > 0) {
@@ -553,13 +552,11 @@
             }
         });
 
-        // Validación en tiempo real para evitar números en nombre y apellidos
         $('#Nombre, #Apellidos').on('keypress', function (e) {
             var char = String.fromCharCode(e.which);
             if (!/[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(char)) {
                 e.preventDefault();
 
-                // Mostrar mensaje de error temporal
                 var $input = $(this);
                 var $parent = $input.closest('.form-group');
                 var existingError = $parent.find('.temp-error');
@@ -577,12 +574,10 @@
             }
         });
 
-        // Convertir correo a minúsculas
         $('#Correo').on('input', function () {
             $(this).val($(this).val().toLowerCase());
         });
 
-        // Validación del formato del correo
         $('#Correo').on('blur', function() {
             var email = $(this).val();
             var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
@@ -600,20 +595,17 @@
             }
         });
 
-        // Confirmación antes de guardar cambios
         $('form').on('submit', function (e) {
             if (!confirm('¿Está seguro de que desea actualizar la información de este usuario?\n\nLos cambios se aplicarán inmediatamente.')) {
                 e.preventDefault();
                 return false;
             }
 
-            // Mostrar indicador de carga
             var $submitBtn = $('.btn-actualizar');
             $submitBtn.html('<i class="fa fa-spinner fa-spin"></i> Actualizando...');
             $submitBtn.prop('disabled', true);
         });
 
-        // Efecto de focus mejorado para los inputs
         $('.form-control-editar:not(.readonly-field)').on('focus', function() {
             $(this).closest('.input-icon-editar').find('i').css('color', '#ff9800');
             $(this).closest('.form-group').find('.control-label').css('color', '#ff9800');
@@ -624,12 +616,10 @@
             $(this).closest('.form-group').find('.control-label').css('color', '#2c3e50');
         });
 
-        // Animación de los elementos del formulario
         $('.fade-in-edit').each(function(index) {
             $(this).css('animation-delay', (index * 0.2) + 's');
         });
 
-        // Limpiar estilos de validación cuando el usuario empiece a escribir
         $('.form-control-editar').on('input', function() {
             if (!$(this).hasClass('readonly-field')) {
                 $(this).css('border-color', '#e9ecef');
@@ -639,16 +629,13 @@
             });
         });
 
-        // Tooltips
         $('[title]').tooltip();
         $('.fa-info-circle, .fa-envelope-o, .fa-lock').tooltip({
             placement: 'top'
         });
 
-        // Destacar cambios realizados
         $('.text-danger').closest('.form-group').find('.form-control-editar').css('border-color', '#dc3545');
 
-        // Efecto especial para el campo readonly
         $('.readonly-field').on('click', function() {
             $(this).effect('shake', { times: 2, distance: 5 }, 300);
         });

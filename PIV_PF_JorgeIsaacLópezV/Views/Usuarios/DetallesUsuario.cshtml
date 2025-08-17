@@ -524,7 +524,6 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2">
-                <!-- Información Personal -->
                 <div class="info-personal-card fade-in-details">
                     <div class="info-card-header">
                         <h4 class="info-card-title">
@@ -609,7 +608,6 @@
                     </div>
                 </div>
 
-                <!-- Privilegios según el tipo de usuario -->
                 @if (Model.TipoUsuarioDescripcion == "Administrador")
                 {
                     <div class="privileges-card privileges-admin fade-in-details">
@@ -674,7 +672,6 @@
                     </div>
                 }
 
-                <!-- Estado del Usuario -->
                 <div class="status-card @(Model.EstadoDescripcion == "Activo" ? "status-card-active" : "status-card-inactive") fade-in-details">
                     <div class="status-card-title">
                         <i class="fa fa-@(Model.EstadoDescripcion == "Activo" ? "check-circle" : "ban")"></i> Estado del Usuario
@@ -699,7 +696,6 @@
                     }
                 </div>
 
-                <!-- Botones de Acción -->
                 <div class="actions-card fade-in-details">
                     <h4 style="color: #2c5aa0; margin-bottom: 25px; font-weight: 600;">
                         <i class="fa fa-cogs"></i> Acciones Disponibles
@@ -720,48 +716,40 @@
 
 <script>
     $(document).ready(function () {
-        // Animación de entrada escalonada
         $('.fade-in-details').each(function(index) {
             $(this).css('animation-delay', (index * 0.2) + 's');
         });
 
-        // Efecto de animación para los paneles
         $('.privileges-card, .status-card, .actions-card').hover(function() {
             $(this).css('transform', 'scale(1.02)');
         }, function() {
             $(this).css('transform', 'scale(1)');
         });
 
-        // Animación del avatar
         $('.user-avatar-large').hover(function() {
             $(this).css('transform', 'scale(1.1) rotate(5deg)');
         }, function() {
             $(this).css('transform', 'scale(1) rotate(0deg)');
         });
 
-        // Efecto de parpadeo para el estado activo
         if ($('.status-active').length > 0) {
             setInterval(function() {
                 $('.status-active i').fadeOut(500).fadeIn(500);
             }, 3000);
         }
 
-        // Tooltips para elementos interactivos
         $('[title]').tooltip();
 
-        // Animación suave al hacer clic en enlaces de correo
         $('a[href^="mailto:"]').on('click', function() {
             $(this).closest('.detail-value').effect('highlight', {color: '#17a2b8'}, 1000);
         });
 
-        // Efecto de hover mejorado para los botones
         $('.btn-action-large').hover(function() {
             $(this).find('i').addClass('fa-spin');
         }, function() {
             $(this).find('i').removeClass('fa-spin');
         });
 
-        // Mensaje de bienvenida personalizado según el rol
         var tipoUsuario = '@Model.TipoUsuarioDescripcion';
         var mensajes = {
             'Administrador': '¡Control total del sistema!',

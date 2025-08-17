@@ -15,19 +15,19 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
         {
             try
             {
-                // Obtener estadísticas del sistema
+                
                 var totalUsuarios = db.Usuarios.Count();
                 var totalClientes = db.Usuarios.Where(u => u.Id_TipoUsuario == 4).Count(); // ID 4 = Cliente
                 var totalAdmins = db.Usuarios.Where(u => u.Id_TipoUsuario != 4).Count(); // Diferente de cliente
                 var usuariosActivos = db.Usuarios.Where(u => u.Id_Estado == 1).Count(); // ID 1 = Activo
 
-                // Pasar datos a la vista
+                
                 ViewBag.TotalUsuarios = totalUsuarios;
                 ViewBag.TotalClientes = totalClientes;
                 ViewBag.TotalAdmins = totalAdmins;
                 ViewBag.UsuariosActivos = usuariosActivos;
 
-                // Información del usuario logueado (si existe en sesión)
+                
                 ViewBag.UsuarioLogueado = Session["NombreCompleto"];
                 ViewBag.RolUsuario = Session["ROL"];
 
@@ -35,7 +35,7 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
             }
             catch (Exception ex)
             {
-                // En caso de error, mostrar valores por defecto
+                
                 ViewBag.TotalUsuarios = 0;
                 ViewBag.TotalClientes = 0;
                 ViewBag.TotalAdmins = 0;

@@ -39,5 +39,10 @@ namespace PIV_PF_JorgeIsaacLópezV.Models.ViewModels
         public List<Cliente> Clientes { get; set; }
         public string Mensaje { get; set; }
         public string TipoMensaje { get; set; }
+
+        public ListaClientes()
+        {
+            Clientes = new List<Cliente>();
+        }
     }
 }

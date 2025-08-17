@@ -16,21 +16,25 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
     {
 
         private LaFarmaciaEntities db = new LaFarmaciaEntities();
-        // GET: Usuarios
-        public ActionResult Index()
-        {
 
-            var usuarios = ObtenerListaUsuarios();
+        // GET: Usuarios
+        public ActionResult Index(int? filtroRol = null)
+        {
+            var usuarios = ObtenerListaUsuariosAdministrativos(filtroRol);
             var modelo = new ListaUsuarios
             {
-                Usuarios = usuarios
+                Usuarios = usuarios,
+                FiltroRolSeleccionado = filtroRol
             };
 
-            if (TempData["Mensaje"] != null) 
+            if (TempData["Mensaje"] != null)
             {
                 modelo.Mensaje = TempData["Mensaje"].ToString();
                 modelo.TipoMensaje = TempData["TipoMensaje"]?.ToString() ?? "info";
             }
+
+            
+            CargarRolesAdministrativos(modelo);
 
             ViewBag.UsuarioLogueado = Session["NombreCompleto"];
             ViewBag.RolUsuario = Session["ROL"];
@@ -38,7 +42,7 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
             return View(modelo);
         }
 
-        public ActionResult CrearUsuario() 
+        public ActionResult CrearUsuario()
         {
             var modelo = new Usuario();
             CargarListasDesplegables(modelo);
@@ -47,13 +51,13 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CrearUsuario(Usuario modelo) 
+        public ActionResult CrearUsuario(Usuario modelo)
         {
-            if (ModelState.IsValid) 
+            if (ModelState.IsValid)
             {
-                try 
+                try
                 {
-                    if (db.Usuarios.Any(u => u.Identificacion == modelo.Identificacion)) 
+                    if (db.Usuarios.Any(u => u.Identificacion == modelo.Identificacion))
                     {
                         ModelState.AddModelError("Identificacion", "Ya existe un usuario con esta identificacion");
                         CargarListasDesplegables(modelo);
@@ -77,9 +81,9 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
                     TempData["TipoMensaje"] = "Success";
                     return RedirectToAction("Index");
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
-                    ModelState.AddModelError("", "Error al crear el usuario" +  ex.Message);
+                    ModelState.AddModelError("", "Error al crear el usuario" + ex.Message);
                 }
             }
 
@@ -87,12 +91,12 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
             return View(modelo);
         }
 
-        public ActionResult EditarUsuario(int id) 
+        public ActionResult EditarUsuario(int id)
         {
-            try 
+            try
             {
                 var usuario = db.Usuarios.Find(id);
-                if (usuario == null) 
+                if (usuario == null)
                 {
                     TempData["Mensaje"] = "Usuario no encontrado";
                     TempData["TipoMensaje"] = "error";
@@ -112,8 +116,8 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
 
                 CargarListasDesplegables(modelo);
                 return View(modelo);
-            } 
-            catch(Exception ex) 
+            }
+            catch (Exception ex)
             {
                 TempData["Mensaje"] = "Error al cargar el usuario: " + ex.Message;
                 TempData["TipoMensaje"] = "error";
@@ -123,13 +127,13 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditarUsuario(Usuario modelo) 
+        public ActionResult EditarUsuario(Usuario modelo)
         {
-            if (ModelState.IsValid) 
+            if (ModelState.IsValid)
             {
-                try 
+                try
                 {
-                    if (db.Usuarios.Any(u => u.Identificacion == modelo.Identificacion && u.Id_Usuario != modelo.Id_Usuario)) 
+                    if (db.Usuarios.Any(u => u.Identificacion == modelo.Identificacion && u.Id_Usuario != modelo.Id_Usuario))
                     {
                         ModelState.AddModelError("Identificacion", "Ya existe otro usuario con esta identificiacion");
                         CargarListasDesplegables(modelo);
@@ -137,7 +141,7 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
                     }
 
                     var usuario = db.Usuarios.Find(modelo.Id_Usuario);
-                    if (usuario != null) 
+                    if (usuario != null)
                     {
                         usuario.Nombre = modelo.Nombre;
                         usuario.Apellidos = modelo.Apellidos;
@@ -152,13 +156,14 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
                         TempData["TipoMensaje"] = "success";
                         return RedirectToAction("Index");
                     }
-                    else 
+                    else
                     {
                         TempData["Mensaje"] = "Usuario no encontrado";
                         TempData["TipoMensaje"] = "error";
                         return RedirectToAction("Index");
                     }
-                } catch(Exception ex) 
+                }
+                catch (Exception ex)
                 {
                     ModelState.AddModelError("", "Error al actualizar el usuario: " + ex.Message);
                 }
@@ -167,16 +172,16 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
             return View(modelo);
         }
 
-        public ActionResult DetallesUsuario(int id) 
+        public ActionResult DetallesUsuario(int id)
         {
-            try 
+            try
             {
                 var usuario = db.Usuarios
                     .Include(u => u.TiposUsuario)
                     .Include(u => u.Estados)
                     .FirstOrDefault(u => u.Id_Usuario == id);
 
-                if (usuario == null) 
+                if (usuario == null)
                 {
                     TempData["Mensaje"] = "Usuario no encontrado";
                     TempData["TipoMensaje"] = "error";
@@ -197,44 +202,74 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
                 };
 
                 return View(modelo);
-                
-            } 
-            catch(Exception ex) 
+
+            }
+            catch (Exception ex)
             {
                 TempData["Mensaje"] = "Error al cargar los detalles del usuario: " + ex.Message;
                 TempData["TipoMensaje"] = "error";
                 return RedirectToAction("Index");
             }
-            
         }
-
-
-
 
         #region Métodos Privados
 
-        private List<Usuario> ObtenerListaUsuarios() 
+        
+        private List<Usuario> ObtenerListaUsuariosAdministrativos(int? filtroRol = null)
         {
-            return db.Usuarios
+            var query = db.Usuarios
                 .Include(u => u.TiposUsuario)
                 .Include(u => u.Estados)
-                .Select(u => new Usuario
-                {
-                    Id_Usuario = u.Id_Usuario,
-                    Identificacion = u.Identificacion,
-                    Nombre = u.Nombre,
-                    Apellidos = u.Apellidos,
-                    Correo = u.Correo,
-                    Id_TipoUsuario = u.Id_TipoUsuario,
-                    Id_Estado = u.Id_Estado,
-                    TipoUsuarioDescripcion = u.TiposUsuario.Descripcion,
-                    EstadoDescripcion = u.Estados.Descripcion
-                })
+                .Where(u => u.Id_TipoUsuario >= 1 && u.Id_TipoUsuario <= 3); 
+
+            
+            if (filtroRol.HasValue && filtroRol.Value > 0)
+            {
+                query = query.Where(u => u.Id_TipoUsuario == filtroRol.Value);
+            }
+
+            return query.Select(u => new Usuario
+            {
+                Id_Usuario = u.Id_Usuario,
+                Identificacion = u.Identificacion,
+                Nombre = u.Nombre,
+                Apellidos = u.Apellidos,
+                Correo = u.Correo,
+                Id_TipoUsuario = u.Id_TipoUsuario,
+                Id_Estado = u.Id_Estado,
+                TipoUsuarioDescripcion = u.TiposUsuario.Descripcion,
+                EstadoDescripcion = u.Estados.Descripcion
+            })
                 .OrderBy(u => u.Nombre)
                 .ToList();
         }
 
-        private void CargarListasDesplegables (Usuario modelo) 
+        
+        private void CargarRolesAdministrativos(ListaUsuarios modelo)
+        {
+            var rolesAdministrativos = db.TiposUsuario
+                .Where(t => t.Id_TipoUsuario >= 1 && t.Id_TipoUsuario <= 3) // Solo roles administrativos
+                .OrderBy(t => t.Descripcion)
+                .Select(t => new SelectListItem
+                {
+                    Value = t.Id_TipoUsuario.ToString(),
+                    Text = t.Descripcion,
+                    Selected = modelo.FiltroRolSeleccionado == t.Id_TipoUsuario
+                })
+                .ToList();
+
+            
+            rolesAdministrativos.Insert(0, new SelectListItem
+            {
+                Value = "0",
+                Text = "Todos los roles",
+                Selected = !modelo.FiltroRolSeleccionado.HasValue || modelo.FiltroRolSeleccionado.Value == 0
+            });
+
+            modelo.RolesAdministrativos = rolesAdministrativos;
+        }
+
+        private void CargarListasDesplegables(Usuario modelo)
         {
             modelo.TiposUsuario = new SelectList(
                 db.TiposUsuario.OrderBy(t => t.Descripcion),
@@ -255,11 +290,11 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
 
         protected override void Dispose(bool disposing)
         {
-                if ( disposing) 
-                {
-                    db.Dispose();
-                }
-                base.Dispose(disposing);
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

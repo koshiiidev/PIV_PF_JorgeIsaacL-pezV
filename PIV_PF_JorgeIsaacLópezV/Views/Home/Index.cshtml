@@ -2,7 +2,6 @@
     ViewBag.Title = "Dashboard";
 }
 
-<!-- Sección de Bienvenida -->
 <div class="welcome-section fade-in-up">
     <div class="row">
         <div class="col-md-8">
@@ -25,7 +24,6 @@
     </div>
 </div>
 
-<!-- Estadísticas Rápidas -->
 <div class="row quick-stats fade-in-up">
     <div class="col-md-3 col-sm-6">
         <div class="stat-item">
@@ -57,45 +55,6 @@
     </div>
 </div>
 
-<!-- Acciones Rápidas Adicionales -->
-<!--<div class="col-md-4">
-        <div class="stats-card fade-in-up" style="text-align: center; padding: 20px;">
-            <div class="card-icon" style="margin: 0 auto;">
-                <i class="fa fa-user-plus"></i>
-            </div>
-            <h3 style="margin-top: 15px;">Nuevo Usuario</h3>
-            <p class="card-description">Crear un nuevo usuario del sistema</p>
-            <a href="@Url.Action("CrearUsuario", "Usuarios")" class="btn-action" style="margin-top: 10px;">
-                <i class="fa fa-plus"></i> Crear Usuario
-            </a>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="stats-card fade-in-up" style="text-align: center; padding: 20px;">
-            <div class="card-icon" style="margin: 0 auto; background: linear-gradient(135deg, var(--secondary-color), #1e7e34);">
-                <i class="fa fa-user-plus"></i>
-            </div>
-            <h3 style="margin-top: 15px;">Nuevo Cliente</h3>
-            <p class="card-description">Registrar un nuevo cliente</p>
-            <a href="@Url.Action("CrearCliente", "Clientes")" class="btn-action success" style="margin-top: 10px;">
-                <i class="fa fa-plus"></i> Crear Cliente
-            </a>
-        </div>
-    </div>
-    <div class="col-md-4">
-            <div class="stats-card fade-in-up" style="text-align: center; padding: 20px;">
-                <div class="card-icon" style="margin: 0 auto; background: linear-gradient(135deg, var(--warning-color), #e0a800);">
-                    <i class="fa fa-cog"></i>
-                </div>
-                <h3 style="margin-top: 15px;">Configuración</h3>
-                <p class="card-description">Ajustes del sistema</p>
-                <a href="#" class="btn-action" style="background: linear-gradient(135deg, var(--warning-color), #e0a800); margin-top: 10px;">
-                    <i class="fa fa-wrench"></i> Configurar
-                </a>
-            </div>
-    </div>
-    </div>-->
-<!-- Acciones Principales -->
 <div class="row">
     <div class="col-md-6">
         <div class="action-card users fade-in-up">
@@ -114,16 +73,15 @@
             <div class="action-icon">
                 <i class="fa fa-user-circle"></i>
             </div>
-            <h4>Agregar Usuarios</h4>
-            <p>Registra  a nuevos usuarios y clientes</p>
-            <a href="@Url.Action("CrearUsuario", "Usuarios")" class="btn-action success">
-                <i class="fa fa-plus"></i> Agregar Usuarios
+            <h4>Gestion de Clientes</h4>
+            <p>Administra los clientes, crea nuevos perfiles o edita la informacion de los clientes.</p>
+            <a href="@Url.Action("Index", "Clientes")" class="btn-action clientes">
+                <i class="fa fa-cog"></i> Gestionar Clientes
             </a>
         </div>
     </div>
 </div>
 
-<!-- Información del Sistema -->
 <div class="row" style="margin-top: 30px;">
     <div class="col-md-12">
         <div class="stats-card fade-in-up">

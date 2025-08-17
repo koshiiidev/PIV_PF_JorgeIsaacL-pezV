@@ -6,13 +6,15 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using PIV_PF_JorgeIsaacLópezV.Filters;
 
 namespace PIV_PF_JorgeIsaacLópezV.Controllers
 {
+    [VerificarAdmin]
     public class ClientesController : Controller
     {
         private LaFarmaciaEntities db = new LaFarmaciaEntities();
-        private const int ID_TIPO_CLIENTE = 4; 
+        private const int ID_TIPO_CLIENTE = 4;
         private const int ID_ESTADO_ACTIVO = 1;
 
         // GET: Clientes
@@ -30,15 +32,19 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
                 modelo.TipoMensaje = TempData["TipoMensaje"]?.ToString() ?? "info";
             }
 
+            
+            ViewBag.UsuarioLogueado = Session["NombreCompleto"];
+            ViewBag.RolUsuario = Session["ROL"];
+
             return View(modelo);
         }
 
-        
         public ActionResult CrearCliente()
         {
             var modelo = new Cliente();
             return View(modelo);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CrearCliente(Cliente modelo)
@@ -47,14 +53,12 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
             {
                 try
                 {
-                    
                     if (db.Usuarios.Any(u => u.Identificacion == modelo.Identificacion))
                     {
                         ModelState.AddModelError("Identificacion", "Ya existe un cliente con esta identificación");
                         return View(modelo);
                     }
 
-                    
                     var partesNombre = SepararNombreCompleto(modelo.NombreCompleto);
 
                     var cliente = new Usuarios
@@ -83,7 +87,6 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
             return View(modelo);
         }
 
-        
         public ActionResult EditarCliente(int id)
         {
             try
@@ -119,7 +122,6 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
             }
         }
 
-        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult EditarCliente(Cliente modelo)
@@ -131,7 +133,6 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
                     var cliente = db.Usuarios.Find(modelo.Id_Usuario);
                     if (cliente != null && cliente.Id_TipoUsuario == ID_TIPO_CLIENTE)
                     {
-                        
                         var partesNombre = SepararNombreCompleto(modelo.NombreCompleto);
 
                         cliente.Nombre = partesNombre.Nombre;
@@ -161,7 +162,6 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
             return View(modelo);
         }
 
-        
         public ActionResult DetallesCliente(int id)
         {
             try
@@ -234,7 +234,6 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
             }
             else
             {
-                
                 var nombre = partes[0];
                 var apellidos = string.Join(" ", partes.Skip(1));
                 return (nombre, apellidos);

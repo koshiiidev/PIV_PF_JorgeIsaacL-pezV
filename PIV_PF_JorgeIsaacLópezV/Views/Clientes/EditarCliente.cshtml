@@ -1,99 +1,494 @@
 ﻿@model PIV_PF_JorgeIsaacLópezV.Models.ViewModels.Cliente
 @{
     ViewBag.Title = "Editar Cliente";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-8 mx-auto">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">Editar Cliente</h4>
-                    <small class="text-muted">ID: @Model.Identificacion</small>
-                </div>
+<style>
+    .editar-cliente-container {
+        padding: 0;
+        background-color: #f8f9fa;
+        min-height: calc(100vh - 70px);
+    }
 
-                <div class="card-body">
-                    @using (Html.BeginForm("EditarCliente", "Clientes", FormMethod.Post,
-                        new { @class = "needs-validation", novalidate = "novalidate" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        @Html.HiddenFor(model => model.Id_Usuario)
-                        @Html.HiddenFor(model => model.Id_TipoUsuario)
-                        @Html.HiddenFor(model => model.Id_Estado)
+    .page-header-editar-cliente {
+        background: linear-gradient(135deg, #ffffff 0%, #fff5f5 100%);
+        padding: 40px 0;
+        margin-bottom: 30px;
+        border-bottom: 1px solid #e9ecef;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
 
-                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+    .page-title-editar-cliente {
+        color: #e74c3c;
+        font-weight: 700;
+        font-size: 2.5em;
+        margin: 0;
+        text-align: center;
+    }
 
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.Identificacion, new { @class = "form-label" })
-                            @Html.EditorFor(model => model.Identificacion, new
+    .page-subtitle-editar-cliente {
+        color: #6c757d;
+        text-align: center;
+        font-size: 1.1em;
+        margin-top: 10px;
+    }
+
+    .form-card-editar-cliente {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        border: none;
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+
+    .form-card-header-editar-cliente {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+        padding: 25px 30px;
+        border: none;
+        position: relative;
+    }
+
+    .form-card-header-editar-cliente::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #f39c12, #e67e22);
+    }
+
+    .form-card-title-editar-cliente {
+        margin: 0;
+        font-size: 1.4em;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+    }
+
+    .form-card-title-editar-cliente i {
+        margin-right: 10px;
+        font-size: 1.2em;
+    }
+
+    .form-card-body-editar-cliente {
+        padding: 40px;
+    }
+
+    .readonly-field-cliente {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef) !important;
+        border: 2px dashed #ced4da !important;
+        color: #6c757d !important;
+        cursor: not-allowed !important;
+        position: relative;
+    }
+
+    .readonly-field-cliente::after {
+        content: '🔒';
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+    }
+
+    .readonly-info-cliente {
+        background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+        border-radius: 10px;
+        padding: 15px 20px;
+        border-left: 4px solid #ffc107;
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .readonly-info-cliente i {
+        color: #856404;
+        margin-right: 10px;
+        font-size: 1.1em;
+    }
+
+    .readonly-info-cliente span {
+        color: #856404;
+        font-size: 0.9em;
+        font-weight: 500;
+    }
+
+    .form-horizontal-editar-cliente .form-group {
+        margin-bottom: 30px;
+        position: relative;
+    }
+
+    .form-horizontal-editar-cliente .control-label {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 0.95em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+    }
+
+    .form-control-editar-cliente {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        font-size: 0.95em;
+        transition: all 0.3s ease;
+        background-color: #fafafa;
+        padding: 15px 20px;
+        height: auto;
+    }
+
+    .form-control-editar-cliente:focus {
+        border-color: #e74c3c;
+        background-color: white;
+        box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+        outline: none;
+    }
+
+    .form-control-editar-cliente:hover:not(.readonly-field-cliente) {
+        border-color: #ced4da;
+        background-color: white;
+    }
+
+    .btn-actualizar-cliente {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 1.1em;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+        box-shadow: 0 5px 20px rgba(231, 76, 60, 0.2);
+        cursor: pointer;
+    }
+
+    .btn-actualizar-cliente:hover {
+        color: white;
+        text-decoration: none;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(231, 76, 60, 0.3);
+    }
+
+    .btn-volver-cliente {
+        background: #6c757d;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 25px;
+        font-weight: 500;
+        font-size: 1.1em;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+        margin-left: 15px;
+    }
+
+    .btn-volver-cliente:hover {
+        background: #5a6268;
+        color: white;
+        text-decoration: none;
+        transform: translateY(-2px);
+    }
+
+    .modificaciones-card-cliente {
+        background: linear-gradient(135deg, #e8f5e8, #d4edda);
+        border-radius: 15px;
+        padding: 25px;
+        border-left: 5px solid #28a745;
+        margin-top: 30px;
+    }
+
+    .restricciones-card-cliente {
+        background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+        border-radius: 15px;
+        padding: 25px;
+        border-left: 5px solid #ffc107;
+        margin-top: 20px;
+    }
+
+    .card-title-info-cliente {
+        color: #155724;
+        font-weight: 600;
+        font-size: 1.2em;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .card-title-warning-cliente {
+        color: #856404;
+        font-weight: 600;
+        font-size: 1.2em;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .card-title-info-cliente i,
+    .card-title-warning-cliente i {
+        margin-right: 10px;
+        font-size: 1.3em;
+    }
+
+    .info-columns-cliente {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+
+    .info-list-editar-cliente {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .info-list-editar-cliente li {
+        padding: 8px 0;
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .info-list-editar-cliente li i {
+        margin-right: 10px;
+        margin-top: 2px;
+        font-size: 0.9em;
+    }
+
+    .info-list-editar-cliente.success li {
+        color: #155724;
+    }
+
+    .info-list-editar-cliente.success li i {
+        color: #28a745;
+    }
+
+    .info-list-editar-cliente.warning li {
+        color: #856404;
+    }
+
+    .info-list-editar-cliente.warning li i {
+        color: #dc3545;
+    }
+
+    .input-icon-editar-cliente {
+        position: relative;
+    }
+
+    .input-icon-editar-cliente i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        z-index: 2;
+    }
+
+    .input-icon-editar-cliente .form-control-editar-cliente {
+        padding-left: 45px;
+    }
+
+    .validation-summary-editar-cliente {
+        background: linear-gradient(135deg, #f8d7da, #f1b0b7);
+        border-radius: 10px;
+        padding: 20px;
+        border-left: 4px solid #dc3545;
+        margin-bottom: 25px;
+    }
+
+    .help-block-editar-cliente {
+        color: #6c757d;
+        font-size: 0.85em;
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+    }
+
+    .help-block-editar-cliente i {
+        margin-right: 5px;
+        color: #e74c3c;
+    }
+
+    .required-field-editar-cliente::after {
+        content: " *";
+        color: #dc3545;
+        font-weight: bold;
+    }
+
+    .form-row-editar-cliente {
+        display: flex;
+        gap: 20px;
+    }
+
+    .form-row-editar-cliente .form-group {
+        flex: 1;
+    }
+
+    @@media (max-width: 768px) {
+        .page-title-editar-cliente {
+            font-size: 2em;
+        }
+
+        .form-card-body-editar-cliente {
+            padding: 25px 20px;
+        }
+
+        .form-row-editar-cliente {
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .info-columns-cliente {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .btn-actualizar-cliente, .btn-volver-cliente {
+            display: block;
+            text-align: center;
+            margin: 10px 0;
+            width: 100%;
+        }
+    }
+
+    .fade-in-edit-cliente {
+        animation: fadeInEditCliente 0.6s ease-out;
+    }
+
+    @@keyframes fadeInEditCliente {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="editar-cliente-container">
+    <div class="page-header-editar-cliente">
+        <div class="container">
+            <h1 class="page-title-editar-cliente">
+                <i class="fa fa-user-edit"></i> Editar Cliente
+            </h1>
+            <p class="page-subtitle-editar-cliente">Actualizar Información del Cliente</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <div class="form-card-editar-cliente fade-in-edit-cliente">
+                    <div class="form-card-header-editar-cliente">
+                        <h4 class="form-card-title-editar-cliente">
+                            <i class="fa fa-edit"></i> Modificar Información del Cliente
+                        </h4>
+                    </div>
+                    <div class="form-card-body-editar-cliente">
+                        @using (Html.BeginForm("EditarCliente", "Clientes", FormMethod.Post, new { @class = "form-horizontal form-horizontal-editar-cliente", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => model.Id_Usuario)
+
+                            if (!ViewData.ModelState.IsValid)
                             {
-                                htmlAttributes = new
-                                {
-                                    @class = "form-control",
-                                    @readonly = "readonly",
-                                    title = "La identificación no se puede modificar"
-                                }
-                            })
-                            <small class="form-text text-muted">
-                                <i class="fas fa-info-circle"></i>
-                                La identificación no se puede modificar
-                            </small>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.NombreCompleto, new { @class = "form-label" })
-                            @Html.EditorFor(model => model.NombreCompleto, new
-                            {
-                                htmlAttributes = new
-                                {
-                                    @class = "form-control",
-                                    placeholder = "Ingrese el nombre completo del cliente",
-                                    required = "required"
-                                }
-                            })
-                            @Html.ValidationMessageFor(model => model.NombreCompleto, "", new { @class = "text-danger" })
-                            <small class="form-text text-muted">Solo se permiten letras y espacios</small>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.Correo, new { @class = "form-label" })
-                            @Html.EditorFor(model => model.Correo, new
-                            {
-                                htmlAttributes = new
-                                {
-                                    @class = "form-control",
-                                    placeholder = "cliente@email.com",
-                                    type = "email",
-                                    required = "required"
-                                }
-                            })
-                            @Html.ValidationMessageFor(model => model.Correo, "", new { @class = "text-danger" })
-                        </div>
-
-                        <div class="form-group">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <button type="submit" class="btn btn-success mr-2">
-                                        <i class="fas fa-save"></i> Guardar Cambios
-                                    </button>
-                                    @Html.ActionLink("Ver Detalles", "DetallesCliente",
-                                        new { id = Model.Id_Usuario },
-                                        new { @class = "btn btn-info" })
+                                <div class="validation-summary-editar-cliente">
+                                    <h5 style="color: #721c24; margin-bottom: 10px;"><i class="fa fa-exclamation-circle"></i> Por favor corrige los siguientes errores:</h5>
+                                    @Html.ValidationSummary(true, "", new { @class = "list-unstyled", @style = "margin: 0; color: #721c24;" })
                                 </div>
-                                <div>
-                                    @Html.ActionLink("Cancelar", "Index", null,
-                                        new { @class = "btn btn-secondary" })
+                            }
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Identificacion, new { @class = "control-label" })
+                                <div class="input-icon-editar-cliente">
+                                    <i class="fa fa-id-badge"></i>
+                                    @Html.EditorFor(model => model.Identificacion, new { htmlAttributes = new { @class = "form-control form-control-editar-cliente readonly-field-cliente", @readonly = "readonly", title = "La identificación no se puede modificar" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.Identificacion, "", new { @class = "text-danger" })
+                                <div class="readonly-info-cliente">
+                                    <i class="fa fa-lock"></i>
+                                    <span>La identificación es única e inmutable y no se puede modificar</span>
                                 </div>
                             </div>
-                        </div>
-                    }
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.NombreCompleto, new { @class = "control-label required-field-editar-cliente" })
+                                <div class="input-icon-editar-cliente">
+                                    <i class="fa fa-user"></i>
+                                    @Html.EditorFor(model => model.NombreCompleto, new { htmlAttributes = new { @class = "form-control form-control-editar-cliente", @placeholder = "Nombre completo del cliente" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.NombreCompleto, "", new { @class = "text-danger" })
+                                <div class="help-block-editar-cliente">
+                                    <i class="fa fa-user-o"></i> Ingrese el nombre y apellidos completos del cliente
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Correo, new { @class = "control-label required-field-editar-cliente" })
+                                <div class="input-icon-editar-cliente">
+                                    <i class="fa fa-envelope"></i>
+                                    @Html.EditorFor(model => model.Correo, new { htmlAttributes = new { @class = "form-control form-control-editar-cliente", @placeholder = "correo@ejemplo.com", @type = "email" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.Correo, "", new { @class = "text-danger" })
+                                <div class="help-block-editar-cliente">
+                                    <i class="fa fa-envelope-o"></i> El correo debe ser válido para enviar notificaciones y promociones
+                                </div>
+                            </div>
+
+                            <hr style="margin: 40px 0; border-color: #e9ecef;">
+
+                            <div class="form-group text-center">
+                                <button type="submit" class="btn-actualizar-cliente">
+                                    <i class="fa fa-save"></i> Actualizar Cliente
+                                </button>
+                                <a href="/Clientes" class="btn-volver-cliente">
+                                    <i class="fa fa-arrow-left"></i> Volver
+                                </a>
+                            </div>
+                        }
+                    </div>
                 </div>
 
-                <div class="card-footer text-muted">
-                    <small>
-                        <i class="fas fa-exclamation-triangle text-warning"></i>
-                        Solo se puede actualizar el nombre completo y el correo electrónico
-                    </small>
+                <div class="info-columns-cliente">
+                    <div class="modificaciones-card-cliente fade-in-edit-cliente">
+                        <div class="card-title-info-cliente">
+                            <i class="fa fa-check-circle"></i> Campos Modificables
+                        </div>
+                        <ul class="info-list-editar-cliente success">
+                            <li><i class="fa fa-check"></i> Nombre completo del cliente</li>
+                            <li><i class="fa fa-check"></i> Correo electrónico</li>
+                        </ul>
+                        <div style="background: rgba(40, 167, 69, 0.1); border-radius: 8px; padding: 15px; margin-top: 15px;">
+                            <small style="color: #155724; display: flex; align-items: center;">
+                                <i class="fa fa-info-circle" style="margin-right: 8px;"></i>
+                                <strong>Nota:</strong> Los cambios se aplicarán inmediatamente al guardar
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="restricciones-card-cliente fade-in-edit-cliente">
+                        <div class="card-title-warning-cliente">
+                            <i class="fa fa-exclamation-triangle"></i> Restricciones
+                        </div>
+                        <ul class="info-list-editar-cliente warning">
+                            <li><i class="fa fa-times"></i> La identificación no se puede modificar</li>
+                            <li><i class="fa fa-times"></i> Solo letras y espacios en el nombre</li>
+                            <li><i class="fa fa-times"></i> El correo debe ser único y válido</li>
+                        </ul>
+                        <div style="background: rgba(231, 76, 60, 0.1); border-radius: 8px; padding: 15px; margin-top: 15px;">
+                            <small style="color: #721c24; display: flex; align-items: center;">
+                                <i class="fa fa-exclamation-circle" style="margin-right: 8px;"></i>
+                                <strong>Importante:</strong> Verificar que el correo sea correcto para comunicaciones
+                            </small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -104,61 +499,88 @@
     @Scripts.Render("~/bundles/jqueryval")
 
     <script>
-        $(document).ready(function() {
-            
-            $('#NombreCompleto, #Correo').addClass('border-primary');
-
-            
-            $('#NombreCompleto').on('input', function() {
-                var nombre = $(this).val();
-                var regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
-
-                if (nombre && !regex.test(nombre)) {
-                    $(this).removeClass('is-valid').addClass('is-invalid');
-                    if ($(this).siblings('.invalid-feedback').length === 0) {
-                        $(this).after('<div class="invalid-feedback">El nombre no debe contener números</div>');
+        $(document).ready(function () {
+            $('#NombreCompleto').on('input', function () {
+                var value = $(this).val();
+                var words = value.split(' ');
+                var titleCase = words.map(function(word) {
+                    if (word.length > 0) {
+                        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
                     }
-                } else if (nombre.trim()) {
-                    $(this).removeClass('is-invalid').addClass('is-valid');
-                    $(this).siblings('.invalid-feedback').remove();
-                } else {
-                    $(this).removeClass('is-valid is-invalid');
-                    $(this).siblings('.invalid-feedback').remove();
+                    return word;
+                }).join(' ');
+                $(this).val(titleCase);
+            });
+
+            $('#NombreCompleto').on('keypress', function (e) {
+                var char = String.fromCharCode(e.which);
+                if (!/[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(char)) {
+                    e.preventDefault();
+
+                    var $input = $(this);
+                    var $parent = $input.closest('.form-group');
+                    var existingError = $parent.find('.temp-error-cliente');
+
+                    if (existingError.length === 0) {
+                        $parent.append('<div class="temp-error-cliente text-danger"><i class="fa fa-exclamation-triangle"></i> Solo se permiten letras y espacios</div>');
+                        setTimeout(function() {
+                            $('.temp-error-cliente').fadeOut(function() {
+                                $(this).remove();
+                            });
+                        }, 3000);
+                    }
+
+                    $input.css('border-color', '#dc3545');
+                    setTimeout(function() {
+                        $input.css('border-color', '#e9ecef');
+                    }, 1000);
+
+                    return false;
                 }
             });
 
-            
-            $('#Correo').on('input', function() {
+            $('#Correo').on('input', function () {
+                $(this).val($(this).val().toLowerCase());
+            });
+
+            $('#Correo').on('blur', function() {
                 var email = $(this).val();
-                var regex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+                var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+                var $parent = $(this).closest('.form-group');
+                var existingError = $parent.find('.email-error-cliente');
 
-                if (email && !regex.test(email)) {
-                    $(this).removeClass('is-valid').addClass('is-invalid');
-                } else if (email.trim()) {
-                    $(this).removeClass('is-invalid').addClass('is-valid');
+                if (email && !emailRegex.test(email)) {
+                    if (existingError.length === 0) {
+                        $parent.append('<div class="email-error-cliente text-danger"><i class="fa fa-exclamation-circle"></i> Formato de correo inválido</div>');
+                    }
+                    $(this).css('border-color', '#dc3545');
                 } else {
-                    $(this).removeClass('is-valid is-invalid');
+                    existingError.remove();
+                    $(this).css('border-color', '#e9ecef');
                 }
             });
 
-            
-            $('form').on('submit', function(e) {
+            $('form').on('submit', function (e) {
                 var isValid = true;
 
-                
                 var nombre = $('#NombreCompleto').val().trim();
                 var regexNombre = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
                 if (!nombre || !regexNombre.test(nombre)) {
                     isValid = false;
-                    $('#NombreCompleto').removeClass('is-valid').addClass('is-invalid');
+                    $('#NombreCompleto').css('border-color', '#dc3545');
+                    if ($('#NombreCompleto').closest('.form-group').find('.validation-error').length === 0) {
+                        $('#NombreCompleto').closest('.form-group').append('<div class="validation-error text-danger">El nombre es requerido y solo debe contener letras</div>');
+                    }
                 }
 
-                
                 var email = $('#Correo').val();
                 var regexEmail = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
                 if (!email || !regexEmail.test(email)) {
                     isValid = false;
-                    $('#Correo').removeClass('is-valid').addClass('is-invalid');
+                    $('#Correo').css('border-color', '#dc3545');
+                    if ($('#Correo').closest('.form-group').find('.validation-error').length === 0) {
+                        $('#Correo').closest('.form-group').append('<div class="validation-error text-danger">Se requiere un correo válido</div>');
+                    }
                 }
 
                 if (!isValid) {
@@ -166,20 +588,76 @@
                     $(window).scrollTop(0);
                     return false;
                 }
-            });
 
-            
-            var formOriginalData = $('form').serialize();
-
-            $('a[href*="Index"]').on('click', function(e) {
-                var currentFormData = $('form').serialize();
-                if (currentFormData !== formOriginalData) {
-                    if (!confirm('¿Está seguro de que desea cancelar? Se perderán los cambios realizados.')) {
-                        e.preventDefault();
-                        return false;
-                    }
+                if (!confirm('¿Está seguro de que desea actualizar la información de este cliente?\n\nLos cambios se aplicarán inmediatamente.')) {
+                    e.preventDefault();
+                    return false;
                 }
+
+                var $submitBtn = $('.btn-actualizar-cliente');
+                $submitBtn.html('<i class="fa fa-spinner fa-spin"></i> Actualizando...');
+                $submitBtn.prop('disabled', true);
             });
+
+            $('.form-control-editar-cliente:not(.readonly-field-cliente)').on('focus', function() {
+                $(this).closest('.input-icon-editar-cliente').find('i').css('color', '#e74c3c');
+                $(this).closest('.form-group').find('.control-label').css('color', '#e74c3c');
+            });
+
+            $('.form-control-editar-cliente').on('blur', function() {
+                $(this).closest('.input-icon-editar-cliente').find('i').css('color', '#6c757d');
+                $(this).closest('.form-group').find('.control-label').css('color', '#2c3e50');
+            });
+
+            $('.fade-in-edit-cliente').each(function(index) {
+                $(this).css('animation-delay', (index * 0.2) + 's');
+            });
+
+            $('.form-control-editar-cliente').on('input', function() {
+                if (!$(this).hasClass('readonly-field-cliente')) {
+                    $(this).css('border-color', '#e9ecef');
+                }
+                $(this).closest('.form-group').find('.validation-error, .temp-error-cliente, .email-error-cliente').fadeOut(function() {
+                    $(this).remove();
+                });
+            });
+
+
+            $('[title]').tooltip();
+            $('.fa-info-circle, .fa-envelope-o, .fa-lock, .fa-user-o').tooltip({
+                placement: 'top'
+            });
+
+
+            $('.readonly-field-cliente').on('click', function() {
+                $(this).effect('shake', { times: 2, distance: 5 }, 300);
+
+
+                var $this = $(this);
+                var $tooltip = $('<div class="temp-tooltip">La identificación no se puede modificar</div>');
+                $tooltip.css({
+                    position: 'absolute',
+                    top: $this.offset().top - 35,
+                    left: $this.offset().left + ($this.outerWidth() / 2) - 100,
+                    background: '#dc3545',
+                    color: 'white',
+                    padding: '5px 10px',
+                    borderRadius: '5px',
+                    fontSize: '12px',
+                    zIndex: 9999,
+                    width: '200px',
+                    textAlign: 'center'
+                });
+
+                $('body').append($tooltip);
+                setTimeout(function() {
+                    $tooltip.fadeOut(function() {
+                        $(this).remove();
+                    });
+                }, 2000);
+            });
+
+            $('.text-danger').closest('.form-group').find('.form-control-editar-cliente').css('border-color', '#dc3545');
         });
     </script>
 }

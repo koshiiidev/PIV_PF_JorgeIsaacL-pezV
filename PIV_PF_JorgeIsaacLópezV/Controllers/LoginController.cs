@@ -57,7 +57,7 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
                     Session["Id_Usuario"] = existenciaUsuario.Id_Usuario;
                     Session["NombreCompleto"] = existenciaUsuario.Nombre + " " + existenciaUsuario.Apellidos;
                     Session.Timeout = 45;
-                    return RedirectToAction("Index", "Usuarios");
+                    return RedirectToAction("Index", "Home");
                 }
                 else if (rolUsuario == "VENDEDOR")
                 {
@@ -65,7 +65,7 @@ namespace PIV_PF_JorgeIsaacLópezV.Controllers
                     Session["Id_Usuario"] = existenciaUsuario.Id_Usuario;
                     Session["NombreCompleto"] = existenciaUsuario.Nombre + " " + existenciaUsuario.Apellidos;
                     Session.Timeout = 45;
-                    return RedirectToAction("Index", "Clientes");
+                    return RedirectToAction("Index", "Home");
                 }
                 else if (rolUsuario == "CONTABILIDAD")
                 {

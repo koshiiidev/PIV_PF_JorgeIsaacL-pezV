@@ -431,7 +431,6 @@
 
 <script>
     $(document).ready(function () {
-        // Convertir a mayúsculas el primer caracter de nombre y apellidos
         $('#Nombre, #Apellidos').on('input', function () {
             var value = $(this).val();
             if (value.length > 0) {
@@ -439,13 +438,11 @@
             }
         });
 
-        // Validación en tiempo real para evitar números en nombre y apellidos
         $('#Nombre, #Apellidos').on('keypress', function (e) {
             var char = String.fromCharCode(e.which);
             if (!/[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(char)) {
                 e.preventDefault();
 
-                // Mostrar mensaje de error temporal
                 var $input = $(this);
                 var $parent = $input.closest('.form-group');
                 var existingError = $parent.find('.temp-error');
@@ -463,12 +460,10 @@
             }
         });
 
-        // Convertir correo a minúsculas
         $('#Correo').on('input', function () {
             $(this).val($(this).val().toLowerCase());
         });
 
-        // Validación del formato del correo en tiempo real
         $('#Correo').on('blur', function() {
             var email = $(this).val();
             var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
@@ -486,12 +481,10 @@
             }
         });
 
-        // Animación de los elementos del formulario
         $('.fade-in-form').each(function(index) {
             $(this).css('animation-delay', (index * 0.2) + 's');
         });
 
-        // Efecto de focus mejorado para los inputs
         $('.form-control-custom').on('focus', function() {
             $(this).closest('.input-icon').find('i').css('color', '#2c5aa0');
             $(this).closest('.form-group').find('.control-label').css('color', '#2c5aa0');
@@ -502,7 +495,6 @@
             $(this).closest('.form-group').find('.control-label').css('color', '#2c3e50');
         });
 
-        // Validación antes de enviar el formulario
         $('form').on('submit', function(e) {
             var isValid = true;
             var requiredFields = ['#Identificacion', '#Nombre', '#Apellidos', '#Correo', '#Id_TipoUsuario', '#Id_Estado'];
@@ -523,7 +515,6 @@
                     scrollTop: $('.validation-summary, .text-danger').first().offset().top - 100
                 }, 500);
 
-                // Mostrar mensaje de error
                 if ($('.validation-summary').length === 0) {
                     $('.form-card-body').prepend(
                         '<div class="validation-summary temp-validation">' +
@@ -535,13 +526,11 @@
                 return false;
             }
 
-            // Mostrar indicador de carga
             var $submitBtn = $('.btn-submit-custom');
             $submitBtn.html('<i class="fa fa-spinner fa-spin"></i> Creando Usuario...');
             $submitBtn.prop('disabled', true);
         });
 
-        // Limpiar estilos de validación cuando el usuario empiece a escribir
         $('.form-control-custom').on('input', function() {
             $(this).css('border-color', '#e9ecef');
             $('.temp-validation').fadeOut(function() {
@@ -549,12 +538,10 @@
             });
         });
 
-        // Tooltips para los iconos de ayuda
         $('.fa-info-circle, .fa-envelope-o').tooltip({
             placement: 'top'
         });
 
-        // Animación suave al hacer scroll a errores
         $('.text-danger').closest('.form-group').find('.form-control-custom').css('border-color', '#dc3545');
     });
 </script>

@@ -36,7 +36,6 @@
             line-height: 1.6;
         }
 
-        /* Navbar Farmacia */
         .navbar-farmacia {
             background: linear-gradient(135deg, var(--primary-color) 0%, #1e3a5f 100%);
             border: none;
@@ -66,7 +65,7 @@
             .navbar-farmacia .navbar-nav {
                 display: flex;
                 flex-direction: row;
-                align-items:center;
+                align-items: center;
                 margin: 0;
                 padding: 0;
                 list-style: none;
@@ -116,9 +115,9 @@
                         background-color: rgba(255, 255, 255, 0.15);
                     }
 
-                    .navbar-farmacia .navbar-nav .nav-link.active:before {
+                        .navbar-farmacia .navbar-nav .nav-link.active:before {
                             width: 80%;
-                    }
+                        }
 
 
                     .navbar-farmacia .navbar-nav .nav-link i {
@@ -145,6 +144,7 @@
                 border: none;
                 background: none;
                 cursor: pointer;
+                text-decoration: none;
             }
 
                 .user-dropdown .dropdown-toggle:hover {
@@ -172,8 +172,49 @@
                     color: var(--primary-color);
                 }
 
+        .user-info {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: rgba(255, 255, 255, 0.9);
+        }
 
-            @@media (max-width: 768px) {
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+            color: lightgray !important;
+        }
+
+        .user-role {
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @@media (max-width: 768px) {
             .navbar-farmacia .navbar-nav {
                 flex-direction: column;
                 width: 100%;
@@ -181,10 +222,10 @@
                 margin-top: 10px;
             }
 
-            .navbar-farmacia .navbar-nav .nav-link {
-                padding: 15px 20px !important;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            }
+                .navbar-farmacia .navbar-nav .nav-link {
+                    padding: 15px 20px !important;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                }
 
             .navbar-user {
                 margin-left: 0;
@@ -196,7 +237,6 @@
             }
         }
 
-        /* Header Dashboard */
         .dashboard-header {
             background: linear-gradient(135deg, white 0%, var(--light-bg) 100%);
             padding: 15px 0;
@@ -219,7 +259,6 @@
             margin-top: 10px;
         }
 
-        /* Cards Dashboard */
         .stats-card {
             background: white;
             border-radius: 15px;
@@ -272,7 +311,6 @@
                 font-size: 0.9em;
             }
 
-        /* Action Cards */
         .action-card {
             background: white;
             border-radius: 15px;
@@ -309,7 +347,7 @@
             }
 
             .action-card.clients .action-icon {
-                background: linear-gradient(135deg, #28a745, #1e7e34);
+                background: linear-gradient(135deg, #e74c3c, #c0392b);
             }
 
             .action-card h4 {
@@ -348,11 +386,14 @@
                 background: linear-gradient(135deg, var(--success-color), #1e7e34);
             }
 
-                .btn-action.success:hover {
-                    box-shadow: 0 5px 20px rgba(40, 167, 69, 0.3);
-                }
+            .btn-action.clientes {
+                background: linear-gradient(135deg, #e74c3c, #c0392b);
+            }
 
-        /* Footer */
+            .btn-action.success:hover {
+                box-shadow: 0 5px 20px rgba(40, 167, 69, 0.3);
+            }
+
         footer {
             background: var(--text-dark);
             color: white;
@@ -362,7 +403,6 @@
             border-top: 4px solid var(--primary-color);
         }
 
-        /* Welcome Section */
         .welcome-section {
             background: linear-gradient(135deg, white 0%, #f1f8ff 100%);
             border-radius: 15px;
@@ -388,7 +428,6 @@
                 display: inline-block;
             }
 
-        /* Responsive */
         @@media (max-width: 768px) {
             .dashboard-title {
                 font-size: 2em;
@@ -403,7 +442,6 @@
             }
         }
 
-        /* Animations */
         @@keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -420,7 +458,6 @@
             animation: fadeInUp 0.6s ease-out;
         }
 
-        /* Quick Stats */
         .quick-stats {
             margin-bottom: 30px;
         }
@@ -448,7 +485,6 @@
             letter-spacing: 1px;
         }
 
-        /* Content Area */
         .content-area {
             min-height: 500px;
             margin-bottom: 30px;
@@ -458,21 +494,18 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-farmacia">
         <div class="container-fluid">
-            <!-- Brand -->
             <a class="navbar-brand" href="/">
                 <i class="fas fa-pills"></i> LA FARMACIA
             </a>
 
-            <!-- Toggle button para móvil -->
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
                 <span style="color: white;"><i class="fas fa-bars"></i></span>
             </button>
 
-            <!-- Menu items -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/Usuarios">
+                        <a class="nav-link active" href="/">
                             <i class="fas fa-tachometer-alt"></i> Dashboard
                         </a>
                     </li>
@@ -482,99 +515,110 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/Clientes/Index">
+                        <a class="nav-link" href="/Clientes">
                             <i class="fas fa-user-friends"></i> Clientes
                         </a>
                     </li>
                 </ul>
 
-
-                <!--<div class="navbar-user">
-        <div class="user-dropdown">
-            <button class="dropdown-toggle" type="button" data-toggle="dropdown">
-                <i class="fas fa-user-circle"></i> Usuario
-                <i class="fas fa-chevron-down ml-1"></i>
-            </button>
-            <div class="dropdown-menu">
-                <a class="dropdown-item" href="">
-                    <i class="fas fa-cog"></i> Configuración
-                </a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="/Logout">
-                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                </a>
-            </div>
-        </div>-->
-            </div>
+                <div class="navbar-user ml-auto">
+                    @if (Session["Id_Usuario"] != null)
+                    {
+                        <div class="dropdown user-dropdown">
+                            <a class="dropdown-toggle d-flex align-items-center" href="#" role="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <div class="user-avatar">
+                                    @{
+                                        string nombreCompleto = Session["NombreCompleto"]?.ToString() ?? "Usuario";
+                                        string iniciales = "";
+                                        var palabras = nombreCompleto.Split(' ');
+                                        if (palabras.Length >= 2)
+                                        {
+                                            iniciales = palabras[0].Substring(0, 1).ToUpper() + palabras[1].Substring(0, 1).ToUpper();
+                                        }
+                                        else if (palabras.Length == 1)
+                                        {
+                                            iniciales = palabras[0].Substring(0, Math.Min(2, palabras[0].Length)).ToUpper();
+                                        }
+                                    }
+                                    @iniciales
+                                </div>
+                                <div class="user-details d-none d-md-block">
+                                    <div class="user-name">@Session["NombreCompleto"]</div>
+                                    <div class="user-role">@Session["ROL"]</div>
+                                </div>
+                                <i class="fas fa-chevron-down ml-2"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                                <div class="dropdown-item-text">
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-avatar mr-3">
+                                            @iniciales
+                                        </div>
+                                        <div>
+                                            <div class="font-weight-bold">@Session["NombreCompleto"]</div>
+                                            <small class="text-muted">@Session["ROL"]</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user mr-2"></i> Mi Perfil
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cog mr-2"></i> Configuración
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-danger" href="@Url.Action("Logout", "Login")">
+                                    <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="dropdown user-dropdown">
+                            <a class="dropdown-toggle d-flex align-items-center" href="#" role="button" id="loginDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-user mr-2"></i>
+                                <span class="d-none d-md-inline">Iniciar Sesión</span>
+                                <i class="fas fa-chevron-down ml-2"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="loginDropdown">
+                                <a class="dropdown-item" href="@Url.Action("Login", "Login")">
+                                    <i class="fas fa-sign-in-alt mr-2"></i> Iniciar Sesión
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <div class="dropdown-item-text">
+                                    <small class="text-muted">¿Necesitas acceso? Contacta al administrador.</small>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     </nav>
 
-    <!--
-    <nav class="navbar navbar-farmacia navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#farmacia-navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/">
-                    <i class="fa fa-heartbeat"></i> LA FARMACIA
-                </a>
-            </div>
-            <div class="collapse navbar-collapse" id="farmacia-navbar">
-                <ul class="navbar-nav navbar-right">
-                    <li><a href="/"><i class="fa fa-home"></i> Dashboard</a></li>
-                    <li><a href="/Usuarios"><i class="fa fa-users"></i> Usuarios</a></li>
-                    <li><a href="#" class="disabled"><i class="fa fa-user-circle"></i> Clientes</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-user"></i> Usuario <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#"><i class="fa fa-cog"></i> Configuración</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#"><i class="fa fa-sign-out"></i> Cerrar Sesión</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav> -->
-    <!--
     <div style="margin-top: 70px;">
-        <div class="dashboard-header">
-            <div class="container">
-                <h1 class="dashboard-title">
-                    <i class="fa fa-heartbeat"></i> Dashboard Administrativo
-                </h1>
-                <p class="dashboard-subtitle">Sistema de Gestión Farmacéutica</p>
+        <div class="container">
+            <div class="content-area">
+                @RenderBody()
             </div>
         </div>
-        -->
-    <div class="container">
-        <!-- AQUÍ SE RENDERIZA EL CONTENIDO DE CADA VISTA -->
-        <div class="content-area">
-            @RenderBody()
-        </div>
+
+        <footer>
+            <div class="container">
+                <p>&copy; @DateTime.Now.Year LA FARMACIA - PROYECTO PROGRAMACION IV. Todos los derechos reservados.</p>
+            </div>
+        </footer>
     </div>
 
-    <footer>
-        <div class="container">
-            <p>&copy; @DateTime.Now.Year LA FARMACIA - PROYECTO PROGRAMACION IV. Todos los derechos reservados.</p>
-        </div>
-    </footer>
-    </div>
 
-    <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.min.js"></script>
 
+    @RenderSection("Scripts", required: false)
     <script>
         $(document).ready(function () {
-            // Smooth scrolling for anchor links
             $('a[href^="#"]').on('click', function (event) {
                 var target = $(this.getAttribute('href'));
                 if (target.length) {
@@ -585,17 +629,21 @@
                 }
             });
 
-            // Add animation delay to cards
             $('.fade-in-up').each(function (index) {
                 $(this).css('animation-delay', (index * 0.1) + 's');
             });
 
-            // Navbar background change on scroll
             $(window).scroll(function () {
                 if ($(this).scrollTop() > 50) {
                     $('.navbar-farmacia').addClass('navbar-scrolled');
                 } else {
                     $('.navbar-farmacia').removeClass('navbar-scrolled');
+                }
+            });
+
+            $(document).click(function (event) {
+                if (!$(event.target).closest('.dropdown').length) {
+                    $('.dropdown-menu').removeClass('show');
                 }
             });
         });

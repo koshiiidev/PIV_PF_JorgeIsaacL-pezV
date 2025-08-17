@@ -42,6 +42,104 @@
         border: none;
     }
 
+    .filter-panel {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+        border: 1px solid #dee2e6;
+    }
+
+    .filter-title {
+        color: #2c5aa0;
+        font-weight: 600;
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .filter-title i {
+        margin-right: 8px;
+    }
+
+    .filter-select {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 0px 15px;
+        font-size: 0.95em;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .filter-select:focus {
+        border-color: #2c5aa0;
+        box-shadow: 0 0 0 0.2rem rgba(44, 90, 160, 0.25);
+        outline: none;
+    }
+
+    .btn-filter {
+        background: linear-gradient(135deg, #2c5aa0, #007bff);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(44, 90, 160, 0.2);
+    }
+
+    .btn-filter:hover {
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(44, 90, 160, 0.3);
+    }
+
+    .btn-clear-filter {
+        background: linear-gradient(135deg, #6c757d, #495057);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(108, 117, 125, 0.2);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-clear-filter:hover {
+        color: white;
+        text-decoration: none;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3);
+    }
+
+    .btn-group {
+        display: flex !important;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-group .btn-filter,
+    .btn-group .btn-clear-filter {
+        flex: 0 0 auto;
+        margin: 0;
+        white-space: nowrap;
+    }
+
+    .active-filter-indicator {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 0.85em;
+        font-weight: 600;
+        margin-left: 10px;
+        display: inline-block;
+    }
+
     .btn-nuevo-usuario {
         background: linear-gradient(135deg, #28a745, #20c997);
         color: white;
@@ -79,7 +177,7 @@
         text-decoration: none;
         transform: translateY(-2px);
         box-shadow: 0 8px 25px rgba(0, 0, 255, 0.3);
-    }  
+    }
 
     .usuarios-card {
         background: white;
@@ -370,19 +468,8 @@
         }
     }
 </style>
-<!--
-<div class="usuarios-container">
-    <div class="page-header-custom">
-        <div class="container">
-            <h1 class="page-title">
-                <i class="fa fa-users"></i> Gestión de Usuarios
-            </h1>
-            <p class="page-subtitle">Administración del Personal de la Farmacia</p>
-        </div>
-    </div>
-    -->
+
 <div class="container">
-    @* Mostrar mensajes *@
     @if (!string.IsNullOrEmpty(Model.Mensaje))
     {
         <div class="alert alert-@(Model.TipoMensaje == "success" ? "success" : Model.TipoMensaje == "error" ? "danger" : Model.TipoMensaje == "warning" ? "warning" : "info")-custom alert-dismissible fade-in" role="alert">
@@ -399,21 +486,73 @@
         <div class="row">
             <div class="col-sm-6">
                 <h4 style="margin: 0; color: #2c5aa0; font-weight: 600;">
-                    <i class="fa fa-list-alt"></i> Panel de Control
+                    <i class="fa fa-list-alt"></i> Panel de Control - Personal
                 </h4>
-                <p style="margin: 5px 0 0 0; color: #6c757d;">Gestiona el personal de tu farmacia</p>
+                <p style="margin: 5px 0 0 0; color: #6c757d;">Gestiona el personal administrativo de tu farmacia</p>
             </div>
             <div class="col-sm-6 text-right">
                 <a href="/Usuarios/CrearUsuario" class="btn-nuevo-usuario">
                     <i class="fa fa-plus-circle"></i> Nuevo Usuario
                 </a>
             </div>
-            <div class="col-sm-12 text-right">
-                <a href="/Clientes/CrearCliente" class="btn-nuevo-cliente">
-                    <i class="fa fa-plus-circle"></i> Nuevo Cliente
-                </a>
-            </div>
         </div>
+    </div>
+
+    <div class="filter-panel fade-in">
+        @using (Html.BeginForm("Index", "Usuarios", FormMethod.Get, new { id = "filtroForm" }))
+        {
+            <div class="row">
+                <div class="col-md-8">
+                    <h5 class="filter-title">
+                        <i class="fa fa-filter"></i> Filtrar Personal por Rol
+                        @if (Model.FiltroRolSeleccionado.HasValue && Model.FiltroRolSeleccionado.Value > 0)
+                        {
+                            var rolSeleccionado = Model.RolesAdministrativos.FirstOrDefault(r => r.Value == Model.FiltroRolSeleccionado.Value.ToString());
+                            if (rolSeleccionado != null)
+                            {
+                                <span class="active-filter-indicator">
+                                    <i class="fa fa-check-circle"></i> @rolSeleccionado.Text
+                                </span>
+                            }
+                        }
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-8">
+                            @Html.DropDownList("filtroRol", Model.RolesAdministrativos, new { @class = "form-control filter-select", id = "filtroRolSelect" })
+                        </div>
+                        <div class="col-md-4">
+                            <div class="btn-group" role="group" style="display: flex; gap: 8px;">
+                                <button type="submit" class="btn btn-filter">
+                                    <i class="fa fa-search"></i> Filtrar
+                                </button>
+                                @if (Model.FiltroRolSeleccionado.HasValue && Model.FiltroRolSeleccionado.Value > 0)
+                                {
+                                    <a href="@Url.Action("Index", "Usuarios")" class="btn btn-clear-filter">
+                                        <i class="fa fa-times"></i> Limpiar
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-right">
+                    <div style="margin-top: 25px;">
+                        <small class="text-muted">
+                            <i class="fa fa-info-circle"></i>
+                            Mostrando <strong>@Model.Usuarios.Count</strong> usuario(s)
+                            @if (Model.FiltroRolSeleccionado.HasValue && Model.FiltroRolSeleccionado.Value > 0)
+                            {
+                                <span>del rol seleccionado</span>
+                            }
+                            else
+                            {
+                                <span>del personal administrativo</span>
+                            }
+                        </small>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 
     @if (Model.Usuarios != null && Model.Usuarios.Any())
@@ -421,7 +560,15 @@
         <div class="usuarios-card fade-in">
             <div class="card-header-custom">
                 <h4 class="card-title-custom">
-                    <i class="fa fa-users"></i> Lista de Usuarios del Sistema
+                    <i class="fa fa-users"></i> Personal Administrativo del Sistema
+                    @if (Model.FiltroRolSeleccionado.HasValue && Model.FiltroRolSeleccionado.Value > 0)
+                    {
+                        var rolSeleccionado = Model.RolesAdministrativos.FirstOrDefault(r => r.Value == Model.FiltroRolSeleccionado.Value.ToString());
+                        if (rolSeleccionado != null)
+                        {
+                            <small style="opacity: 0.8; margin-left: 10px;">- @rolSeleccionado.Text</small>
+                        }
+                    }
                 </h4>
             </div>
             <div class="table-responsive">
@@ -487,27 +634,23 @@
                 <div class="row">
                     <div class="col-md-3 col-sm-6">
                         <span class="stats-number">@Model.Usuarios.Count</span>
-                        <span class="stats-label">Total Usuarios</span>
+                        <span class="stats-label">Total Personal</span>
                     </div>
                     <div class="col-md-3 col-sm-6">
                         <span class="stats-number">@Model.Usuarios.Count(u => u.EstadoDescripcion == "Activo")</span>
                         <span class="stats-label">Activos</span>
                     </div>
-                    <div class="col-md-3 col-sm-6">
-                        <span class="stats-number">@Model.Usuarios.Count(u => u.TipoUsuarioDescripcion == "Cliente")</span>
-                        <span class="stats-label">Clientes</span>
+                    <div class="col-md-2 col-sm-6">
+                        <span class="stats-number">@Model.Usuarios.Count(u => u.TipoUsuarioDescripcion == "Administrador")</span>
+                        <span class="stats-label">Administradores</span>
                     </div>
-                    <div class="col-md-3 col-sm-6">
+                    <div class="col-md-2 col-sm-6">
                         <span class="stats-number">@Model.Usuarios.Count(u => u.TipoUsuarioDescripcion == "Vendedor")</span>
                         <span class="stats-label">Vendedores</span>
                     </div>
-                    <div class="col-md-3 col-sm-6">
+                    <div class="col-md-2 col-sm-6">
                         <span class="stats-number">@Model.Usuarios.Count(u => u.TipoUsuarioDescripcion == "Contabilidad")</span>
                         <span class="stats-label">Contabilidad</span>
-                    </div>
-                    <div class="col-md-3 col-sm-6">
-                        <span class="stats-number">@Model.Usuarios.Count(u => u.TipoUsuarioDescripcion == "Administrador")</span>
-                        <span class="stats-label">Administradores</span>
                     </div>
                 </div>
             </div>
@@ -519,30 +662,59 @@
             <div class="empty-state-icon">
                 <i class="fa fa-users"></i>
             </div>
-            <h3>No hay usuarios registrados</h3>
+            <h3>
+                @if (Model.FiltroRolSeleccionado.HasValue && Model.FiltroRolSeleccionado.Value > 0)
+                {
+                    <span>No hay usuarios con el rol seleccionado</span>
+                }
+                else
+                {
+                    <span>No hay personal administrativo registrado</span>
+                }
+            </h3>
             <p>
-                Aún no se han registrado usuarios en el sistema de la farmacia.<br>
-                Comienza creando el primer usuario para empezar a gestionar tu equipo.
+                @if (Model.FiltroRolSeleccionado.HasValue && Model.FiltroRolSeleccionado.Value > 0)
+                {
+                    <span>
+                        No se encontraron usuarios con el rol seleccionado.<br>
+                        Intenta con otro filtro o registra nuevos usuarios.
+                    </span>
+                }
+                else
+                {
+                    <span>
+                        Aún no se ha registrado personal administrativo en el sistema de la farmacia.<br>
+                        Comienza creando el primer usuario para empezar a gestionar tu equipo.
+                    </span>
+                }
             </p>
-            <a href="/Usuarios/CrearUsuario" class="btn-nuevo-usuario">
-                <i class="fa fa-user-plus"></i> Registrar Primer Usuario
-            </a>
+            @if (!Model.FiltroRolSeleccionado.HasValue || Model.FiltroRolSeleccionado.Value == 0)
+            {
+                <a href="/Usuarios/CrearUsuario" class="btn-nuevo-usuario">
+                    <i class="fa fa-user-plus"></i> Registrar Primer Usuario
+                </a>
+            }
+            else
+            {
+                <a href="@Url.Action("Index", "Usuarios")" class="btn btn-clear-filter" style="display: inline-block; margin-right: 10px;">
+                    <i class="fa fa-list"></i> Ver Todo el Personal
+                </a>
+                <a href="/Usuarios/CrearUsuario" class="btn-nuevo-usuario">
+                    <i class="fa fa-user-plus"></i> Crear Usuario
+                </a>
+            }
         </div>
     }
-</div>
 </div>
 
 <script>
     $(document).ready(function () {
-        // Auto-ocultar las alertas después de 6 segundos
         setTimeout(function () {
             $('.alert-custom').fadeOut('slow');
         }, 6000);
 
-        // Tooltip para los botones
         $('[title]').tooltip();
 
-        // Efecto de hover mejorado para las filas
         $('.table-custom tbody tr').hover(
             function () {
                 $(this).find('.btn-accion').addClass('btn-hover-effect');
@@ -552,12 +724,10 @@
             }
         );
 
-        // Animación de entrada escalonada
         $('.fade-in').each(function (index) {
             $(this).css('animation-delay', (index * 0.1) + 's');
         });
 
-        // Contador animado para las estadísticas
         $('.stats-number').each(function () {
             var $this = $(this);
             var countTo = $this.text();
@@ -576,6 +746,35 @@
                     }
                 });
             }
+        });
+
+        $('#filtroRolSelect').change(function () {
+            var selectedValue = $(this).val();
+            if (selectedValue === '0') {
+                window.location.href = '@Url.Action("Index", "Usuarios")';
+            } else {
+                $('#filtroForm').submit();
+            }
+        });
+
+        @if (Model.FiltroRolSeleccionado.HasValue && Model.FiltroRolSeleccionado.Value > 0)
+        {
+            <text>
+            $('.filter-panel').addClass('border-success').css({
+                'border-width': '2px',
+                'background': 'linear-gradient(135deg, #d4edda, #c3e6cb)'
+            });
+            </text>
+        }
+
+        $('.btn-filter').click(function (e) {
+            $(this).html('<i class="fa fa-spinner fa-spin"></i> Filtrando...');
+        });
+
+        $('#filtroRolSelect').focus(function () {
+            $(this).parent().addClass('shadow-lg');
+        }).blur(function () {
+            $(this).parent().removeClass('shadow-lg');
         });
     });
 </script>

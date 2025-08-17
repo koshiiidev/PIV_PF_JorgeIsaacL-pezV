@@ -1,0 +1,135 @@
+﻿@model PIV_PF_JorgeIsaacLópezV.Models.ViewModels.Cliente
+@{
+    ViewBag.Title = "Registrar Cliente";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Registrar Nuevo Cliente</h4>
+                </div>
+
+                <div class="card-body">
+                    @using (Html.BeginForm("CrearCliente", "Clientes", FormMethod.Post,
+                        new { @class = "needs-validation", novalidate = "novalidate" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Identificacion, new { @class = "form-label" })
+                            @Html.EditorFor(model => model.Identificacion, new
+                            {
+                                htmlAttributes = new
+                                {
+                                    @class = "form-control",
+                                    placeholder = "Ingrese la identificación del cliente",
+                                    required = "required"
+                                }
+                            })
+                            @Html.ValidationMessageFor(model => model.Identificacion, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.NombreCompleto, new { @class = "form-label" })
+                            @Html.EditorFor(model => model.NombreCompleto, new
+                            {
+                                htmlAttributes = new
+                                {
+                                    @class = "form-control",
+                                    placeholder = "Ingrese el nombre completo del cliente",
+                                    required = "required"
+                                }
+                            })
+                            @Html.ValidationMessageFor(model => model.NombreCompleto, "", new { @class = "text-danger" })
+                            <small class="form-text text-muted">Solo se permiten letras y espacios</small>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Correo, new { @class = "form-label" })
+                            @Html.EditorFor(model => model.Correo, new
+                            {
+                                htmlAttributes = new
+                                {
+                                    @class = "form-control",
+                                    placeholder = "cliente@email.com",
+                                    type = "email",
+                                    required = "required"
+                                }
+                            })
+                            @Html.ValidationMessageFor(model => model.Correo, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Registrar Cliente
+                            </button>
+                            @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary" })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function() {
+            // Validación en tiempo real para el nombre
+            $('#NombreCompleto').on('input', function() {
+                var nombre = $(this).val();
+                var regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+
+                if (nombre && !regex.test(nombre)) {
+                    $(this).addClass('is-invalid');
+                    if ($(this).siblings('.invalid-feedback').length === 0) {
+                        $(this).after('<div class="invalid-feedback">El nombre no debe contener números</div>');
+                    }
+                } else {
+                    $(this).removeClass('is-invalid');
+                    $(this).siblings('.invalid-feedback').remove();
+                }
+            });
+
+            // Validación del formulario antes del envío
+            $('form').on('submit', function(e) {
+                var isValid = true;
+
+                // Validar identificación
+                var identificacion = $('#Identificacion').val();
+                if (!identificacion || identificacion <= 0) {
+                    isValid = false;
+                    $('#Identificacion').addClass('is-invalid');
+                }
+
+                // Validar nombre
+                var nombre = $('#NombreCompleto').val().trim();
+                var regexNombre = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+                if (!nombre || !regexNombre.test(nombre)) {
+                    isValid = false;
+                    $('#NombreCompleto').addClass('is-invalid');
+                }
+
+                // Validar email
+                var email = $('#Correo').val();
+                var regexEmail = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+                if (!email || !regexEmail.test(email)) {
+                    isValid = false;
+                    $('#Correo').addClass('is-invalid');
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        });
+    </script>
+}
+

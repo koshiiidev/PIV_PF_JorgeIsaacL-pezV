@@ -1,0 +1,191 @@
+﻿@model PIV_PF_JorgeIsaacLópezV.Models.ViewModels.Usuario
+@{
+    ViewBag.Title = "Detalles del Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h2>
+                    <i class="fa fa-user"></i> Detalles del Usuario
+                    <small>Información completa</small>
+                </h2>
+            </div>
+
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <i class="fa fa-id-card"></i> Información Personal
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="dl-horizontal">
+                                <dt>@Html.DisplayNameFor(model => model.Identificacion):</dt>
+                                <dd>
+                                    <strong class="text-primary">@Html.DisplayFor(model => model.Identificacion)</strong>
+                                </dd>
+
+                                <dt>@Html.DisplayNameFor(model => model.Nombre):</dt>
+                                <dd>@Html.DisplayFor(model => model.Nombre)</dd>
+
+                                <dt>@Html.DisplayNameFor(model => model.Apellidos):</dt>
+                                <dd>@Html.DisplayFor(model => model.Apellidos)</dd>
+
+                                <dt>Nombre Completo:</dt>
+                                <dd><strong>@Model.NombreCompleto</strong></dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="dl-horizontal">
+                                <dt>@Html.DisplayNameFor(model => model.Correo):</dt>
+                                <dd>
+                                    <a href="mailto:@Model.Correo" class="text-info">
+                                        <i class="fa fa-envelope"></i> @Html.DisplayFor(model => model.Correo)
+                                    </a>
+                                </dd>
+
+                                <dt>Tipo de Usuario:</dt>
+                                <dd>
+                                    <span class="label label-@(Model.TipoUsuarioDescripcion == "Administrador" ? "danger" : Model.TipoUsuarioDescripcion == "Vendedor" ? "primary" : "info") label-lg">
+                                        <i class="fa fa-@(Model.TipoUsuarioDescripcion == "Administrador" ? "user-shield" : Model.TipoUsuarioDescripcion == "Vendedor" ? "shopping-cart" : "calculator")"></i>
+                                        @Model.TipoUsuarioDescripcion
+                                    </span>
+                                </dd>
+
+                                <dt>Estado:</dt>
+                                <dd>
+                                    <span class="label label-@(Model.EstadoDescripcion == "Activo" ? "success" : "default") label-lg">
+                                        <i class="fa fa-@(Model.EstadoDescripcion == "Activo" ? "check-circle" : "ban")"></i>
+                                        @Model.EstadoDescripcion
+                                    </span>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel de información adicional según el tipo de usuario -->
+            @if (Model.TipoUsuarioDescripcion == "Administrador")
+            {
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <i class="fa fa-user-shield"></i> Usuario Administrador
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="alert alert-info">
+                            <i class="fa fa-info-circle"></i>
+                            <strong>Privilegios de Administrador:</strong>
+                            Este usuario tiene permisos completos en el sistema, incluyendo la gestión de usuarios, configuración general y acceso a todos los módulos.
+                        </div>
+                        <h5><strong>Permisos:</strong></h5>
+                        <ul class="list-unstyled">
+                            <li><i class="fa fa-check text-success"></i> Crear, editar y gestionar usuarios</li>
+                            <li><i class="fa fa-check text-success"></i> Acceso a configuración del sistema</li>
+                            <li><i class="fa fa-check text-success"></i> Acceso a todos los módulos</li>
+                            <li><i class="fa fa-check text-success"></i> Reportes y estadísticas completas</li>
+                        </ul>
+                    </div>
+                </div>
+            }
+            else if (Model.TipoUsuarioDescripcion == "Vendedor")
+            {
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <i class="fa fa-shopping-cart"></i> Usuario Vendedor
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="alert alert-info">
+                            <i class="fa fa-info-circle"></i>
+                            <strong>Perfil de Vendedor:</strong>
+                            Este usuario está enfocado en las actividades de venta y atención al cliente.
+                        </div>
+                        <h5><strong>Permisos:</strong></h5>
+                        <ul class="list-unstyled">
+                            <li><i class="fa fa-check text-success"></i> Gestión de ventas</li>
+                            <li><i class="fa fa-check text-success"></i> Consulta de inventarios</li>
+                            <li><i class="fa fa-check text-success"></i> Atención al cliente</li>
+                            <li><i class="fa fa-check text-success"></i> Reportes de ventas</li>
+                        </ul>
+                    </div>
+                </div>
+            }
+            else if (Model.TipoUsuarioDescripcion == "Contabilidad")
+            {
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <i class="fa fa-calculator"></i> Usuario Contabilidad
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="alert alert-info">
+                            <i class="fa fa-info-circle"></i>
+                            <strong>Perfil de Contabilidad:</strong>
+                            Este usuario tiene acceso a los módulos financieros y contables del sistema.
+                        </div>
+                        <h5><strong>Permisos:</strong></h5>
+                        <ul class="list-unstyled">
+                            <li><i class="fa fa-check text-success"></i> Gestión contable</li>
+                            <li><i class="fa fa-check text-success"></i> Reportes financieros</li>
+                            <li><i class="fa fa-check text-success"></i> Control de costos</li>
+                            <li><i class="fa fa-check text-success"></i> Análisis de rentabilidad</li>
+                        </ul>
+                    </div>
+                </div>
+            }
+
+            <!-- Panel de estado del usuario -->
+            <div class="panel panel-@(Model.EstadoDescripcion == "Activo" ? "success" : "default")">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <i class="fa fa-@(Model.EstadoDescripcion == "Activo" ? "check-circle" : "ban")"></i> Estado del Usuario
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    @if (Model.EstadoDescripcion == "Activo")
+                    {
+                        <div class="alert alert-success">
+                            <i class="fa fa-check-circle"></i>
+                            <strong>Usuario Activo:</strong> Este usuario puede acceder al sistema y realizar todas las operaciones permitidas según su tipo de usuario.
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            <i class="fa fa-exclamation-triangle"></i>
+                            <strong>Usuario Inactivo:</strong> Este usuario no puede acceder al sistema. Para permitir el acceso, debe cambiar su estado a "Activo".
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="panel panel-default">
+                <div class="panel-body text-center">
+                    <div class="btn-group btn-group-lg" role="group">
+                        @Html.ActionLink("Editar Usuario", "EditarUsuario", new { id = Model.Id_Usuario }, new { @class = "btn btn-warning" })
+                        @Html.ActionLink("Volver a Lista", "Index", null, new { @class = "btn btn-default" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Efecto de animación para los paneles
+            $('.panel').hide().fadeIn(300);
+        });
+    </script>
+}

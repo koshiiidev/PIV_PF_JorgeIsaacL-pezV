@@ -1,0 +1,185 @@
+﻿@model PIV_PF_JorgeIsaacLópezV.Models.ViewModels.Cliente
+@{
+    ViewBag.Title = "Editar Cliente";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Editar Cliente</h4>
+                    <small class="text-muted">ID: @Model.Identificacion</small>
+                </div>
+
+                <div class="card-body">
+                    @using (Html.BeginForm("EditarCliente", "Clientes", FormMethod.Post,
+                        new { @class = "needs-validation", novalidate = "novalidate" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.Id_Usuario)
+                        @Html.HiddenFor(model => model.Id_TipoUsuario)
+                        @Html.HiddenFor(model => model.Id_Estado)
+
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Identificacion, new { @class = "form-label" })
+                            @Html.EditorFor(model => model.Identificacion, new
+                            {
+                                htmlAttributes = new
+                                {
+                                    @class = "form-control",
+                                    @readonly = "readonly",
+                                    title = "La identificación no se puede modificar"
+                                }
+                            })
+                            <small class="form-text text-muted">
+                                <i class="fas fa-info-circle"></i>
+                                La identificación no se puede modificar
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.NombreCompleto, new { @class = "form-label" })
+                            @Html.EditorFor(model => model.NombreCompleto, new
+                            {
+                                htmlAttributes = new
+                                {
+                                    @class = "form-control",
+                                    placeholder = "Ingrese el nombre completo del cliente",
+                                    required = "required"
+                                }
+                            })
+                            @Html.ValidationMessageFor(model => model.NombreCompleto, "", new { @class = "text-danger" })
+                            <small class="form-text text-muted">Solo se permiten letras y espacios</small>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Correo, new { @class = "form-label" })
+                            @Html.EditorFor(model => model.Correo, new
+                            {
+                                htmlAttributes = new
+                                {
+                                    @class = "form-control",
+                                    placeholder = "cliente@email.com",
+                                    type = "email",
+                                    required = "required"
+                                }
+                            })
+                            @Html.ValidationMessageFor(model => model.Correo, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <button type="submit" class="btn btn-success mr-2">
+                                        <i class="fas fa-save"></i> Guardar Cambios
+                                    </button>
+                                    @Html.ActionLink("Ver Detalles", "DetallesCliente",
+                                        new { id = Model.Id_Usuario },
+                                        new { @class = "btn btn-info" })
+                                </div>
+                                <div>
+                                    @Html.ActionLink("Cancelar", "Index", null,
+                                        new { @class = "btn btn-secondary" })
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="card-footer text-muted">
+                    <small>
+                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                        Solo se puede actualizar el nombre completo y el correo electrónico
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function() {
+            
+            $('#NombreCompleto, #Correo').addClass('border-primary');
+
+            
+            $('#NombreCompleto').on('input', function() {
+                var nombre = $(this).val();
+                var regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+
+                if (nombre && !regex.test(nombre)) {
+                    $(this).removeClass('is-valid').addClass('is-invalid');
+                    if ($(this).siblings('.invalid-feedback').length === 0) {
+                        $(this).after('<div class="invalid-feedback">El nombre no debe contener números</div>');
+                    }
+                } else if (nombre.trim()) {
+                    $(this).removeClass('is-invalid').addClass('is-valid');
+                    $(this).siblings('.invalid-feedback').remove();
+                } else {
+                    $(this).removeClass('is-valid is-invalid');
+                    $(this).siblings('.invalid-feedback').remove();
+                }
+            });
+
+            
+            $('#Correo').on('input', function() {
+                var email = $(this).val();
+                var regex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+
+                if (email && !regex.test(email)) {
+                    $(this).removeClass('is-valid').addClass('is-invalid');
+                } else if (email.trim()) {
+                    $(this).removeClass('is-invalid').addClass('is-valid');
+                } else {
+                    $(this).removeClass('is-valid is-invalid');
+                }
+            });
+
+            
+            $('form').on('submit', function(e) {
+                var isValid = true;
+
+                
+                var nombre = $('#NombreCompleto').val().trim();
+                var regexNombre = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+                if (!nombre || !regexNombre.test(nombre)) {
+                    isValid = false;
+                    $('#NombreCompleto').removeClass('is-valid').addClass('is-invalid');
+                }
+
+                
+                var email = $('#Correo').val();
+                var regexEmail = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+                if (!email || !regexEmail.test(email)) {
+                    isValid = false;
+                    $('#Correo').removeClass('is-valid').addClass('is-invalid');
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    $(window).scrollTop(0);
+                    return false;
+                }
+            });
+
+            
+            var formOriginalData = $('form').serialize();
+
+            $('a[href*="Index"]').on('click', function(e) {
+                var currentFormData = $('form').serialize();
+                if (currentFormData !== formOriginalData) {
+                    if (!confirm('¿Está seguro de que desea cancelar? Se perderán los cambios realizados.')) {
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,141 @@
+﻿@model PIV_PF_JorgeIsaacLópezV.Models.ViewModels.Usuario
+@{
+    ViewBag.Title = "Crear Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h2>
+                    <i class="fa fa-user-plus"></i> Crear Nuevo Usuario
+                    <small>Registro en el sistema</small>
+                </h2>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <i class="fa fa-edit"></i> Información del Usuario
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    @using (Html.BeginForm("CrearUsuario", "Usuarios", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Identificacion, new { @class = "control-label col-md-2" })
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.Identificacion, new { htmlAttributes = new { @class = "form-control", @placeholder = "Ingrese la identificación única" } })
+                                @Html.ValidationMessageFor(model => model.Identificacion, "", new { @class = "text-danger small" })
+                                <small class="help-block text-muted">
+                                    <i class="fa fa-info-circle"></i> La identificación debe ser única en el sistema
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Nombre, new { @class = "control-label col-md-2" })
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", @placeholder = "Ingrese el nombre" } })
+                                @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger small" })
+                            </div>
+
+                            @Html.LabelFor(model => model.Apellidos, new { @class = "control-label col-md-2" })
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.Apellidos, new { htmlAttributes = new { @class = "form-control", @placeholder = "Ingrese los apellidos" } })
+                                @Html.ValidationMessageFor(model => model.Apellidos, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Correo, new { @class = "control-label col-md-2" })
+                            <div class="col-md-6">
+                                @Html.EditorFor(model => model.Correo, new { htmlAttributes = new { @class = "form-control", @placeholder = "usuario@ejemplo.com", @type = "email" } })
+                                @Html.ValidationMessageFor(model => model.Correo, "", new { @class = "text-danger small" })
+                                <small class="help-block text-muted">
+                                    <i class="fa fa-envelope"></i> Debe ser un correo electrónico válido
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Id_TipoUsuario, new { @class = "control-label col-md-2" })
+                            <div class="col-md-4">
+                                @Html.DropDownListFor(model => model.Id_TipoUsuario, Model.TiposUsuario, "-- Seleccione un tipo --", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Id_TipoUsuario, "", new { @class = "text-danger small" })
+                            </div>
+
+                            @Html.LabelFor(model => model.Id_Estado, new { @class = "control-label col-md-2" })
+                            <div class="col-md-4">
+                                @Html.DropDownListFor(model => model.Id_Estado, Model.Estados, "-- Seleccione un estado --", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Id_Estado, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="fa fa-save"></i> Crear Usuario
+                                </button>
+                                @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-default btn-lg" })
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <i class="fa fa-info-circle"></i> Información Importante
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-unstyled">
+                        <li><i class="fa fa-check text-success"></i> <strong>Identificación:</strong> Debe ser única para cada usuario</li>
+                        <li><i class="fa fa-check text-success"></i> <strong>Nombre y Apellidos:</strong> No deben contener números, solo letras y espacios</li>
+                        <li><i class="fa fa-check text-success"></i> <strong>Correo:</strong> Debe tener un formato válido (usuario@dominio.com)</li>
+                        <li><i class="fa fa-check text-success"></i> <strong>Tipo de Usuario:</strong> Administrador, Vendedor o Contabilidad</li>
+                        <li><i class="fa fa-check text-success"></i> <strong>Estado:</strong> Activo o Inactivo</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            // Convertir a mayúsculas el primer caracter de nombre y apellidos
+            $('#Nombre, #Apellidos').on('input', function () {
+                var value = $(this).val();
+                if (value.length > 0) {
+                    $(this).val(value.charAt(0).toUpperCase() + value.slice(1).toLowerCase());
+                }
+            });
+
+            // Validación en tiempo real para evitar números en nombre y apellidos
+            $('#Nombre, #Apellidos').on('keypress', function (e) {
+                var char = String.fromCharCode(e.which);
+                if (!/[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(char)) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // Convertir correo a minúsculas
+            $('#Correo').on('input', function () {
+                $(this).val($(this).val().toLowerCase());
+            });
+        });
+    </script>
+}

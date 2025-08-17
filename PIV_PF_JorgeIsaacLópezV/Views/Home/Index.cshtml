@@ -1,33 +1,164 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Dashboard";
 }
 
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
-
+<!-- Sección de Bienvenida -->
+<div class="welcome-section fade-in-up">
     <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
+        <div class="col-md-8">
+            <h3><i class="fa fa-user-md"></i> Bienvenido al Sistema La Farmacia</h3>
+            <p class="lead">Panel de control administrativo para la gestión integral de usuarios y clientes del sistema farmacéutico.</p>
+            @if (ViewBag.UsuarioLogueado != null)
+            {
+                <p><strong>Usuario:</strong> @ViewBag.UsuarioLogueado</p>
+                if (ViewBag.RolUsuario != null)
+                {
+                    <span class="user-role">@ViewBag.RolUsuario</span>
+                }
+            }
+        </div>
+        <div class="col-md-4 text-right">
+            <div class="welcome-icon">
+                <i class="fa fa-heartbeat" style="font-size: 4em; color: var(--primary-color); opacity: 0.3;"></i>
+            </div>
+        </div>
     </div>
-</main>
+</div>
+
+<!-- Estadísticas Rápidas -->
+<div class="row quick-stats fade-in-up">
+    <div class="col-md-3 col-sm-6">
+        <div class="stat-item">
+            <i class="fa fa-users" style="font-size: 2em; color: var(--primary-color); margin-bottom: 10px;"></i>
+            <span class="stat-number">@ViewBag.TotalUsuarios</span>
+            <span class="stat-label">Total Usuarios</span>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="stat-item">
+            <i class="fa fa-user-circle" style="font-size: 2em; color: var(--secondary-color); margin-bottom: 10px;"></i>
+            <span class="stat-number">@ViewBag.TotalClientes</span>
+            <span class="stat-label">Clientes</span>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="stat-item">
+            <i class="fa fa-shield" style="font-size: 2em; color: var(--accent-color); margin-bottom: 10px;"></i>
+            <span class="stat-number">@ViewBag.TotalAdmins</span>
+            <span class="stat-label">Administradores</span>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="stat-item">
+            <i class="fa fa-check-circle" style="font-size: 2em; color: var(--success-color); margin-bottom: 10px;"></i>
+            <span class="stat-number">@ViewBag.UsuariosActivos</span>
+            <span class="stat-label">Usuarios Activos</span>
+        </div>
+    </div>
+</div>
+
+<!-- Acciones Rápidas Adicionales -->
+<!--<div class="col-md-4">
+        <div class="stats-card fade-in-up" style="text-align: center; padding: 20px;">
+            <div class="card-icon" style="margin: 0 auto;">
+                <i class="fa fa-user-plus"></i>
+            </div>
+            <h3 style="margin-top: 15px;">Nuevo Usuario</h3>
+            <p class="card-description">Crear un nuevo usuario del sistema</p>
+            <a href="@Url.Action("CrearUsuario", "Usuarios")" class="btn-action" style="margin-top: 10px;">
+                <i class="fa fa-plus"></i> Crear Usuario
+            </a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stats-card fade-in-up" style="text-align: center; padding: 20px;">
+            <div class="card-icon" style="margin: 0 auto; background: linear-gradient(135deg, var(--secondary-color), #1e7e34);">
+                <i class="fa fa-user-plus"></i>
+            </div>
+            <h3 style="margin-top: 15px;">Nuevo Cliente</h3>
+            <p class="card-description">Registrar un nuevo cliente</p>
+            <a href="@Url.Action("CrearCliente", "Clientes")" class="btn-action success" style="margin-top: 10px;">
+                <i class="fa fa-plus"></i> Crear Cliente
+            </a>
+        </div>
+    </div>
+    <div class="col-md-4">
+            <div class="stats-card fade-in-up" style="text-align: center; padding: 20px;">
+                <div class="card-icon" style="margin: 0 auto; background: linear-gradient(135deg, var(--warning-color), #e0a800);">
+                    <i class="fa fa-cog"></i>
+                </div>
+                <h3 style="margin-top: 15px;">Configuración</h3>
+                <p class="card-description">Ajustes del sistema</p>
+                <a href="#" class="btn-action" style="background: linear-gradient(135deg, var(--warning-color), #e0a800); margin-top: 10px;">
+                    <i class="fa fa-wrench"></i> Configurar
+                </a>
+            </div>
+    </div>
+    </div>-->
+<!-- Acciones Principales -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="action-card users fade-in-up">
+            <div class="action-icon">
+                <i class="fa fa-users"></i>
+            </div>
+            <h4>Gestión de Usuarios</h4>
+            <p>Administra los usuarios del sistema, crea nuevos perfiles y gestiona roles y permisos de acceso.</p>
+            <a href="@Url.Action("Index", "Usuarios")" class="btn-action">
+                <i class="fa fa-cog"></i> Gestionar Usuarios
+            </a>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="action-card clients fade-in-up">
+            <div class="action-icon">
+                <i class="fa fa-user-circle"></i>
+            </div>
+            <h4>Agregar Usuarios</h4>
+            <p>Registra  a nuevos usuarios y clientes</p>
+            <a href="@Url.Action("CrearUsuario", "Usuarios")" class="btn-action success">
+                <i class="fa fa-plus"></i> Agregar Usuarios
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Información del Sistema -->
+<div class="row" style="margin-top: 30px;">
+    <div class="col-md-12">
+        <div class="stats-card fade-in-up">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card-icon" style="float: left; margin-right: 20px;">
+                        <i class="fa fa-info-circle"></i>
+                    </div>
+                    <div style="overflow: hidden;">
+                        <h3>Estado del Sistema</h3>
+                        <p class="card-description">
+                            El sistema está funcionando correctamente. Última actualización: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+                        </p>
+                        <small class="text-muted">
+                            <i class="fa fa-calendar"></i> Fecha actual: @DateTime.Now.ToString("dddd, dd 'de' MMMM 'de' yyyy", new System.Globalization.CultureInfo("es-ES"))
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="text-right">
+                        <div style="margin-bottom: 10px;">
+                            <span class="label" style="background-color: var(--success-color); color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.9em;">
+                                <i class="fa fa-check"></i> Sistema Activo
+                            </span>
+                        </div>
+                        <div>
+                            <small class="text-muted">
+                                <i class="fa fa-server"></i> Servidor en línea<br>
+                                <i class="fa fa-database"></i> Base de datos conectada
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

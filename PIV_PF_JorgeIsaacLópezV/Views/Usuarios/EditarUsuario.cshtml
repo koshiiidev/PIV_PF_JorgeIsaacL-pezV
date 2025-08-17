@@ -4,122 +4,537 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="page-header">
-                <h2>
-                    <i class="fa fa-user-edit"></i> Editar Usuario
-                    <small>Actualizar información</small>
-                </h2>
-            </div>
+<style>
+    .editar-usuario-container {
+        padding: 0;
+        background-color: #f8f9fa;
+        min-height: calc(100vh - 70px);
+    }
 
-            <div class="panel panel-warning">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <i class="fa fa-edit"></i> Modificar Información del Usuario
-                    </h4>
-                </div>
-                <div class="panel-body">
-                    @using (Html.BeginForm("EditarUsuario", "Usuarios", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        @Html.HiddenFor(model => model.Id_Usuario)
+    .page-header-editar {
+        background: linear-gradient(135deg, #ffffff 0%, #fff8e1 100%);
+        padding: 40px 0;
+        margin-bottom: 30px;
+        border-bottom: 1px solid #e9ecef;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
 
-                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+    .page-title-editar {
+        color: #ff8f00;
+        font-weight: 700;
+        font-size: 2.5em;
+        margin: 0;
+        text-align: center;
+    }
 
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.Identificacion, new { @class = "control-label col-md-2" })
-                            <div class="col-md-4">
-                                @Html.EditorFor(model => model.Identificacion, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", title = "La identificación no se puede modificar" } })
-                                @Html.ValidationMessageFor(model => model.Identificacion, "", new { @class = "text-danger small" })
-                                <small class="help-block text-muted">
-                                    <i class="fa fa-lock"></i> La identificación no se puede modificar
-                                </small>
+    .page-subtitle-editar {
+        color: #6c757d;
+        text-align: center;
+        font-size: 1.1em;
+        margin-top: 10px;
+    }
+
+    .form-card-editar {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        border: none;
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+
+    .form-card-header-editar {
+        background: linear-gradient(135deg, #ff9800, #f57c00);
+        color: white;
+        padding: 25px 30px;
+        border: none;
+        position: relative;
+    }
+
+    .form-card-header-editar::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #2c5aa0, #007bff);
+    }
+
+    .form-card-title-editar {
+        margin: 0;
+        font-size: 1.4em;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+    }
+
+    .form-card-title-editar i {
+        margin-right: 10px;
+        font-size: 1.2em;
+    }
+
+    .form-card-body-editar {
+        padding: 40px;
+    }
+
+    .readonly-field {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef) !important;
+        border: 2px dashed #ced4da !important;
+        color: #6c757d !important;
+        cursor: not-allowed !important;
+        position: relative;
+    }
+
+    .readonly-field::after {
+        content: '🔒';
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+    }
+
+    .readonly-info {
+        background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+        border-radius: 10px;
+        padding: 15px 20px;
+        border-left: 4px solid #ffc107;
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .readonly-info i {
+        color: #856404;
+        margin-right: 10px;
+        font-size: 1.1em;
+    }
+
+    .readonly-info span {
+        color: #856404;
+        font-size: 0.9em;
+        font-weight: 500;
+    }
+
+    .form-horizontal-editar .form-group {
+        margin-bottom: 30px;
+        position: relative;
+    }
+
+    .form-horizontal-editar .control-label {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 0.95em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+    }
+
+    .form-control-editar {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        font-size: 0.95em;
+        transition: all 0.3s ease;
+        background-color: #fafafa;
+        padding: 0px 20px;
+    }
+
+    .form-control-editar:focus {
+        border-color: #ff9800;
+        background-color: white;
+        box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        outline: none;
+    }
+
+    .form-control-editar:hover:not(.readonly-field) {
+        border-color: #ced4da;
+        background-color: white;
+    }
+
+    .btn-actualizar {
+        background: linear-gradient(135deg, #ff9800, #f57c00);
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 1.1em;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+        box-shadow: 0 5px 20px rgba(255, 152, 0, 0.2);
+        cursor: pointer;
+    }
+
+    .btn-actualizar:hover {
+        color: white;
+        text-decoration: none;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(255, 152, 0, 0.3);
+    }
+
+    .btn-detalles {
+        background: linear-gradient(135deg, #17a2b8, #138496);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 25px;
+        font-weight: 500;
+        font-size: 1.1em;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+        margin-left: 15px;
+    }
+
+    .btn-detalles:hover {
+        background: linear-gradient(135deg, #138496, #117a8b);
+        color: white;
+        text-decoration: none;
+        transform: translateY(-2px);
+    }
+
+    .btn-volver {
+        background: #6c757d;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 25px;
+        font-weight: 500;
+        font-size: 1.1em;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+        margin-left: 15px;
+    }
+
+    .btn-volver:hover {
+        background: #5a6268;
+        color: white;
+        text-decoration: none;
+        transform: translateY(-2px);
+    }
+
+    .modificaciones-card {
+        background: linear-gradient(135deg, #e8f5e8, #d4edda);
+        border-radius: 15px;
+        padding: 25px;
+        border-left: 5px solid #28a745;
+        margin-top: 30px;
+    }
+
+    .restricciones-card {
+        background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+        border-radius: 15px;
+        padding: 25px;
+        border-left: 5px solid #ffc107;
+        margin-top: 20px;
+    }
+
+    .card-title-info {
+        color: #155724;
+        font-weight: 600;
+        font-size: 1.2em;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .card-title-warning {
+        color: #856404;
+        font-weight: 600;
+        font-size: 1.2em;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .card-title-info i,
+    .card-title-warning i {
+        margin-right: 10px;
+        font-size: 1.3em;
+    }
+
+    .info-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+
+    .info-list-editar {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .info-list-editar li {
+        padding: 8px 0;
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .info-list-editar li i {
+        margin-right: 10px;
+        margin-top: 2px;
+        font-size: 0.9em;
+    }
+
+    .info-list-editar.success li {
+        color: #155724;
+    }
+
+    .info-list-editar.success li i {
+        color: #28a745;
+    }
+
+    .info-list-editar.warning li {
+        color: #856404;
+    }
+
+    .info-list-editar.warning li i {
+        color: #dc3545;
+    }
+
+    .input-icon-editar {
+        position: relative;
+    }
+
+    .input-icon-editar i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        z-index: 2;
+    }
+
+    .input-icon-editar .form-control-editar {
+        padding-left: 45px;
+    }
+
+    .validation-summary-editar {
+        background: linear-gradient(135deg, #f8d7da, #f1b0b7);
+        border-radius: 10px;
+        padding: 20px;
+        border-left: 4px solid #dc3545;
+        margin-bottom: 25px;
+    }
+
+    .help-block-editar {
+        color: #6c757d;
+        font-size: 0.85em;
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+    }
+
+    .help-block-editar i {
+        margin-right: 5px;
+        color: #17a2b8;
+    }
+
+    .required-field-editar::after {
+        content: " *";
+        color: #dc3545;
+        font-weight: bold;
+    }
+
+    .form-row-editar {
+        display: flex;
+        gap: 20px;
+    }
+
+    .form-row-editar .form-group {
+        flex: 1;
+    }
+
+    @@media (max-width: 768px) {
+        .page-title-editar {
+            font-size: 2em;
+        }
+
+        .form-card-body-editar {
+            padding: 25px 20px;
+        }
+
+        .form-row-editar {
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .info-columns {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .btn-actualizar, .btn-detalles, .btn-volver {
+            display: block;
+            text-align: center;
+            margin: 10px 0;
+            width: 100%;
+        }
+    }
+
+    .fade-in-edit {
+        animation: fadeInEdit 0.6s ease-out;
+    }
+
+    @@keyframes fadeInEdit {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="editar-usuario-container">
+    <div class="page-header-editar">
+        <div class="container">
+            <h1 class="page-title-editar">
+                <i class="fa fa-user-edit"></i> Editar Usuario
+            </h1>
+            <p class="page-subtitle-editar">Actualizar Información del Personal</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <div class="form-card-editar fade-in-edit">
+                    <div class="form-card-header-editar">
+                        <h4 class="form-card-title-editar">
+                            <i class="fa fa-edit"></i> Modificar Información del Usuario
+                        </h4>
+                    </div>
+                    <div class="form-card-body-editar">
+                        @using (Html.BeginForm("EditarUsuario", "Usuarios", FormMethod.Post, new { @class = "form-horizontal form-horizontal-editar", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => model.Id_Usuario)
+
+                            if (!ViewData.ModelState.IsValid)
+                            {
+                                <div class="validation-summary-editar">
+                                    <h5 style="color: #721c24; margin-bottom: 10px;"><i class="fa fa-exclamation-circle"></i> Por favor corrige los siguientes errores:</h5>
+                                    @Html.ValidationSummary(true, "", new { @class = "list-unstyled", @style = "margin: 0; color: #721c24;" })
+                                </div>
+                            }
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Identificacion, new { @class = "control-label" })
+                                <div class="input-icon-editar">
+                                    <i class="fa fa-id-badge"></i>
+                                    @Html.EditorFor(model => model.Identificacion, new { htmlAttributes = new { @class = "form-control form-control-editar readonly-field", @readonly = "readonly", title = "La identificación no se puede modificar" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.Identificacion, "", new { @class = "text-danger" })
+                                <div class="readonly-info">
+                                    <i class="fa fa-lock"></i>
+                                    <span>La identificación es única e inmutable y no se puede modificar</span>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.Nombre, new { @class = "control-label col-md-2" })
-                            <div class="col-md-4">
-                                @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", @placeholder = "Ingrese el nombre" } })
-                                @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger small" })
+                            <div class="form-row-editar">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Nombre, new { @class = "control-label required-field-editar" })
+                                    <div class="input-icon-editar">
+                                        <i class="fa fa-user"></i>
+                                        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control form-control-editar", @placeholder = "Nombre del usuario" } })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Apellidos, new { @class = "control-label required-field-editar" })
+                                    <div class="input-icon-editar">
+                                        <i class="fa fa-user"></i>
+                                        @Html.EditorFor(model => model.Apellidos, new { htmlAttributes = new { @class = "form-control form-control-editar", @placeholder = "Apellidos del usuario" } })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.Apellidos, "", new { @class = "text-danger" })
+                                </div>
                             </div>
 
-                            @Html.LabelFor(model => model.Apellidos, new { @class = "control-label col-md-2" })
-                            <div class="col-md-4">
-                                @Html.EditorFor(model => model.Apellidos, new { htmlAttributes = new { @class = "form-control", @placeholder = "Ingrese los apellidos" } })
-                                @Html.ValidationMessageFor(model => model.Apellidos, "", new { @class = "text-danger small" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.Correo, new { @class = "control-label col-md-2" })
-                            <div class="col-md-6">
-                                @Html.EditorFor(model => model.Correo, new { htmlAttributes = new { @class = "form-control", @placeholder = "usuario@ejemplo.com", @type = "email" } })
-                                @Html.ValidationMessageFor(model => model.Correo, "", new { @class = "text-danger small" })
-                                <small class="help-block text-muted">
-                                    <i class="fa fa-envelope"></i> Debe ser un correo electrónico válido
-                                </small>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.Id_TipoUsuario, new { @class = "control-label col-md-2" })
-                            <div class="col-md-4">
-                                @Html.DropDownListFor(model => model.Id_TipoUsuario, Model.TiposUsuario, "-- Seleccione un tipo --", new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.Id_TipoUsuario, "", new { @class = "text-danger small" })
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Correo, new { @class = "control-label required-field-editar" })
+                                <div class="input-icon-editar">
+                                    <i class="fa fa-envelope"></i>
+                                    @Html.EditorFor(model => model.Correo, new { htmlAttributes = new { @class = "form-control form-control-editar", @placeholder = "correo@ejemplo.com", @type = "email" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.Correo, "", new { @class = "text-danger" })
+                                <div class="help-block-editar">
+                                    <i class="fa fa-envelope-o"></i> El correo debe ser válido para recibir notificaciones del sistema
+                                </div>
                             </div>
 
-                            @Html.LabelFor(model => model.Id_Estado, new { @class = "control-label col-md-2" })
-                            <div class="col-md-4">
-                                @Html.DropDownListFor(model => model.Id_Estado, Model.Estados, "-- Seleccione un estado --", new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.Id_Estado, "", new { @class = "text-danger small" })
+                            <div class="form-row-editar">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Id_TipoUsuario, "Tipo de Usuario", new { @class = "control-label required-field-editar" })
+                                    <div class="input-icon-editar">
+                                        <i class="fa fa-user-tag"></i>
+                                        @Html.DropDownListFor(model => model.Id_TipoUsuario, Model.TiposUsuario, "-- Seleccione el tipo de usuario --", new { @class = "form-control form-control-editar" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.Id_TipoUsuario, "", new { @class = "text-danger" })
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Id_Estado, "Estado", new { @class = "control-label required-field-editar" })
+                                    <div class="input-icon-editar">
+                                        <i class="fa fa-toggle-on"></i>
+                                        @Html.DropDownListFor(model => model.Id_Estado, Model.Estados, "-- Seleccione el estado --", new { @class = "form-control form-control-editar" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.Id_Estado, "", new { @class = "text-danger" })
+                                </div>
                             </div>
-                        </div>
 
-                        <hr />
+                            <hr style="margin: 40px 0; border-color: #e9ecef;">
 
-                        <div class="form-group">
-                            <div class="col-md-offset-2 col-md-10">
-                                <button type="submit" class="btn btn-warning btn-lg">
+                            <div class="form-group text-center">
+                                <button type="submit" class="btn-actualizar">
                                     <i class="fa fa-save"></i> Actualizar Usuario
                                 </button>
-                                @Html.ActionLink("Ver Detalles", "DetallesUsuario", new { id = Model.Id_Usuario }, new { @class = "btn btn-info btn-lg" })
-                                @Html.ActionLink("Volver a Lista", "Index", null, new { @class = "btn btn-default btn-lg" })
+                                <a href="/Usuarios/DetallesUsuario/@Model.Id_Usuario" class="btn-detalles">
+                                    <i class="fa fa-eye"></i> Ver Detalles
+                                </a>
+                                <a href="/Usuarios" class="btn-volver">
+                                    <i class="fa fa-arrow-left"></i> Volver
+                                </a>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
-            </div>
 
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <i class="fa fa-info-circle"></i> Campos Modificables
-                    </h4>
-                </div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5><strong>Puede modificar:</strong></h5>
-                            <ul class="list-unstyled">
-                                <li><i class="fa fa-check text-success"></i> Nombre completo</li>
-                                <li><i class="fa fa-check text-success"></i> Apellidos</li>
-                                <li><i class="fa fa-check text-success"></i> Correo electrónico</li>
-                                <li><i class="fa fa-check text-success"></i> Tipo de usuario</li>
-                                <li><i class="fa fa-check text-success"></i> Estado</li>
-                            </ul>
+                <div class="info-columns">
+                    <div class="modificaciones-card fade-in-edit">
+                        <div class="card-title-info">
+                            <i class="fa fa-check-circle"></i> Campos Modificables
                         </div>
-                        <div class="col-md-6">
-                            <h5><strong>No puede modificar:</strong></h5>
-                            <ul class="list-unstyled">
-                                <li><i class="fa fa-times text-danger"></i> Identificación del usuario</li>
-                            </ul>
-                            <div class="alert alert-warning alert-sm">
-                                <i class="fa fa-exclamation-triangle"></i>
-                                <small>La identificación es única e inmutable</small>
-                            </div>
+                        <ul class="info-list-editar success">
+                            <li><i class="fa fa-check"></i> Nombre del usuario</li>
+                            <li><i class="fa fa-check"></i> Apellidos del usuario</li>
+                            <li><i class="fa fa-check"></i> Correo electrónico</li>
+                            <li><i class="fa fa-check"></i> Tipo de usuario (rol)</li>
+                            <li><i class="fa fa-check"></i> Estado (activo/inactivo)</li>
+                        </ul>
+                    </div>
+
+                    <div class="restricciones-card fade-in-edit">
+                        <div class="card-title-warning">
+                            <i class="fa fa-exclamation-triangle"></i> Restricciones
+                        </div>
+                        <ul class="info-list-editar warning">
+                            <li><i class="fa fa-times"></i> La identificación no se puede modificar</li>
+                            <li><i class="fa fa-times"></i> Solo letras en nombres y apellidos</li>
+                            <li><i class="fa fa-times"></i> El correo debe ser único y válido</li>
+                        </ul>
+                        <div style="background: rgba(255, 152, 0, 0.1); border-radius: 8px; padding: 10px; margin-top: 15px;">
+                            <small style="color: #856404;">
+                                <i class="fa fa-info-circle"></i>
+                                <strong>Importante:</strong> Los cambios afectarán inmediatamente los permisos del usuario
+                            </small>
                         </div>
                     </div>
                 </div>
@@ -128,39 +543,114 @@
     </div>
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-    <script>
-        $(document).ready(function () {
-            // Convertir a mayúsculas el primer caracter de nombre y apellidos
-            $('#Nombre, #Apellidos').on('input', function () {
-                var value = $(this).val();
-                if (value.length > 0) {
-                    $(this).val(value.charAt(0).toUpperCase() + value.slice(1).toLowerCase());
-                }
-            });
+<script>
+    $(document).ready(function () {
+        // Convertir a mayúsculas el primer caracter de nombre y apellidos
+        $('#Nombre, #Apellidos').on('input', function () {
+            var value = $(this).val();
+            if (value.length > 0) {
+                $(this).val(value.charAt(0).toUpperCase() + value.slice(1).toLowerCase());
+            }
+        });
 
-            // Validación en tiempo real para evitar números en nombre y apellidos
-            $('#Nombre, #Apellidos').on('keypress', function (e) {
-                var char = String.fromCharCode(e.which);
-                if (!/[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(char)) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
+        // Validación en tiempo real para evitar números en nombre y apellidos
+        $('#Nombre, #Apellidos').on('keypress', function (e) {
+            var char = String.fromCharCode(e.which);
+            if (!/[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(char)) {
+                e.preventDefault();
 
-            // Convertir correo a minúsculas
-            $('#Correo').on('input', function () {
-                $(this).val($(this).val().toLowerCase());
-            });
+                // Mostrar mensaje de error temporal
+                var $input = $(this);
+                var $parent = $input.closest('.form-group');
+                var existingError = $parent.find('.temp-error');
 
-            // Confirmación antes de guardar cambios
-            $('form').on('submit', function (e) {
-                if (!confirm('¿Está seguro de que desea actualizar la información de este usuario?')) {
-                    e.preventDefault();
-                    return false;
+                if (existingError.length === 0) {
+                    $parent.append('<div class="temp-error text-danger">Solo se permiten letras y espacios</div>');
+                    setTimeout(function() {
+                        $('.temp-error').fadeOut(function() {
+                            $(this).remove();
+                        });
+                    }, 2000);
                 }
+
+                return false;
+            }
+        });
+
+        // Convertir correo a minúsculas
+        $('#Correo').on('input', function () {
+            $(this).val($(this).val().toLowerCase());
+        });
+
+        // Validación del formato del correo
+        $('#Correo').on('blur', function() {
+            var email = $(this).val();
+            var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+            var $parent = $(this).closest('.form-group');
+            var existingError = $parent.find('.email-error');
+
+            if (email && !emailRegex.test(email)) {
+                if (existingError.length === 0) {
+                    $parent.append('<div class="email-error text-danger">Formato de correo inválido</div>');
+                }
+                $(this).css('border-color', '#dc3545');
+            } else {
+                existingError.remove();
+                $(this).css('border-color', '#e9ecef');
+            }
+        });
+
+        // Confirmación antes de guardar cambios
+        $('form').on('submit', function (e) {
+            if (!confirm('¿Está seguro de que desea actualizar la información de este usuario?\n\nLos cambios se aplicarán inmediatamente.')) {
+                e.preventDefault();
+                return false;
+            }
+
+            // Mostrar indicador de carga
+            var $submitBtn = $('.btn-actualizar');
+            $submitBtn.html('<i class="fa fa-spinner fa-spin"></i> Actualizando...');
+            $submitBtn.prop('disabled', true);
+        });
+
+        // Efecto de focus mejorado para los inputs
+        $('.form-control-editar:not(.readonly-field)').on('focus', function() {
+            $(this).closest('.input-icon-editar').find('i').css('color', '#ff9800');
+            $(this).closest('.form-group').find('.control-label').css('color', '#ff9800');
+        });
+
+        $('.form-control-editar').on('blur', function() {
+            $(this).closest('.input-icon-editar').find('i').css('color', '#6c757d');
+            $(this).closest('.form-group').find('.control-label').css('color', '#2c3e50');
+        });
+
+        // Animación de los elementos del formulario
+        $('.fade-in-edit').each(function(index) {
+            $(this).css('animation-delay', (index * 0.2) + 's');
+        });
+
+        // Limpiar estilos de validación cuando el usuario empiece a escribir
+        $('.form-control-editar').on('input', function() {
+            if (!$(this).hasClass('readonly-field')) {
+                $(this).css('border-color', '#e9ecef');
+            }
+            $('.temp-validation').fadeOut(function() {
+                $(this).remove();
             });
         });
-    </script>
-}
+
+        // Tooltips
+        $('[title]').tooltip();
+        $('.fa-info-circle, .fa-envelope-o, .fa-lock').tooltip({
+            placement: 'top'
+        });
+
+        // Destacar cambios realizados
+        $('.text-danger').closest('.form-group').find('.form-control-editar').css('border-color', '#dc3545');
+
+        // Efecto especial para el campo readonly
+        $('.readonly-field').on('click', function() {
+            $(this).effect('shake', { times: 2, distance: 5 }, 300);
+        });
+    });
+</script>

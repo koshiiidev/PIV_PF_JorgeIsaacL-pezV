@@ -4,123 +4,578 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="page-header">
-                <h2>
-                    <i class="fa fa-users"></i> Gestión de Usuarios
-                    <small>Administración del sistema</small>
-                </h2>
-            </div>
+<style>
+    .usuarios-container {
+        padding: 0;
+        background-color: #f8f9fa;
+    }
 
-            @* Mostrar mensajes *@
-            @if (!string.IsNullOrEmpty(Model.Mensaje))
-            {
-                <div class="alert alert-@(Model.TipoMensaje == "success" ? "success" : Model.TipoMensaje == "error" ? "danger" : Model.TipoMensaje == "warning" ? "warning" : "info") alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <i class="fa fa-@(Model.TipoMensaje == "success" ? "check-circle" : Model.TipoMensaje == "error" ? "exclamation-circle" : Model.TipoMensaje == "warning" ? "exclamation-triangle" : "info-circle")"></i>
-                    @Model.Mensaje
-                </div>
+    .page-header-custom {
+        background: linear-gradient(135deg, #ffffff 0%, #f1f8ff 100%);
+        padding: 20px 0;
+        margin-bottom: 30px;
+        border-bottom: 1px solid #e9ecef;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .page-title {
+        color: #2c5aa0;
+        font-weight: 700;
+        font-size: 1.2em;
+        margin: 0;
+        text-align: center;
+    }
+
+    .page-subtitle {
+        color: #6c757d;
+        text-align: center;
+        font-size: 0.7em;
+        margin-top: 10px;
+    }
+
+    .control-panel {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+        border: none;
+    }
+
+    .btn-nuevo-usuario {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+    }
+        .btn-nuevo-usuario:hover {
+            color: white;
+            text-decoration: none;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+        }
+
+    .btn-nuevo-cliente {
+        background: linear-gradient(135deg, #2c5aa0, #007bff);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+    }
+
+    .btn-nuevo-cliente:hover {
+        color: white;
+        text-decoration: none;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 255, 0.3);
+    }  
+
+    .usuarios-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+        border: none;
+        overflow: hidden;
+    }
+
+    .card-header-custom {
+        background: linear-gradient(135deg, #2c5aa0, #007bff);
+        color: white;
+        padding: 20px 25px;
+        border: none;
+        position: relative;
+    }
+
+        .card-header-custom::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #34c759, #20c997);
+        }
+
+    .card-title-custom {
+        margin: 0;
+        font-size: 1.3em;
+        font-weight: 600;
+    }
+
+    .table-custom {
+        margin: 0;
+        font-size: 0.95em;
+    }
+
+        .table-custom thead th {
+            background-color: #f8f9fa;
+            border-top: none;
+            border-bottom: 2px solid #dee2e6;
+            color: #495057;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+            padding: 15px;
+        }
+
+        .table-custom tbody tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+            .table-custom tbody tr:hover {
+                background-color: #f8fffe;
+                transform: translateX(5px);
+                box-shadow: 0 3px 15px rgba(44, 90, 160, 0.1);
             }
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <h4 class="panel-title">
-                                <i class="fa fa-list"></i> Lista de Usuarios
-                            </h4>
-                        </div>
-                        <div class="col-sm-6 text-right">
-                            @Html.ActionLink("Nuevo Usuario", "CrearUsuario", null, new { @class = "btn btn-success btn-sm" })
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    @if (Model.Usuarios != null && Model.Usuarios.Any())
-                    {
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Identificación</th>
-                                        <th>Nombre Completo</th>
-                                        <th>Correo Electrónico</th>
-                                        <th>Tipo de Usuario</th>
-                                        <th>Estado</th>
-                                        <th class="text-center">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var usuario in Model.Usuarios)
-                                    {
-                                        <tr>
-                                            <td>
-                                                <strong>@usuario.Identificacion</strong>
-                                            </td>
-                                            <td>@usuario.NombreCompleto</td>
-                                            <td>
-                                                <a href="mailto:@usuario.Correo">@usuario.Correo</a>
-                                            </td>
-                                            <td>
-                                                <span class="label label-@(usuario.TipoUsuarioDescripcion == "Administrador" ? "danger" : usuario.TipoUsuarioDescripcion == "Vendedor" ? "primary" : "info")">
-                                                    @usuario.TipoUsuarioDescripcion
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span class="label label-@(usuario.EstadoDescripcion == "Activo" ? "success" : "default")">
-                                                    <i class="fa fa-@(usuario.EstadoDescripcion == "Activo" ? "check" : "ban")"></i>
-                                                    @usuario.EstadoDescripcion
-                                                </span>
-                                            </td>
-                                            <td class="text-center">
-                                                <div class="btn-group btn-group-sm" role="group">
-                                                    @Html.ActionLink("Ver", "DetallesUsuario", new { id = usuario.Id_Usuario }, new { @class = "btn btn-info btn-xs", title = "Ver detalles" })
-                                                    @Html.ActionLink("Editar", "EditarUsuario", new { id = usuario.Id_Usuario }, new { @class = "btn btn-warning btn-xs", title = "Editar usuario" })
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
+        .table-custom td {
+            padding: 15px;
+            vertical-align: middle;
+            border-top: none;
+        }
 
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="alert alert-info">
-                                    <i class="fa fa-info-circle"></i>
-                                    <strong>Total de usuarios registrados:</strong> @Model.Usuarios.Count
-                                </div>
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="alert alert-warning text-center">
-                            <h4><i class="fa fa-exclamation-triangle"></i> No hay usuarios registrados</h4>
-                            <p>Aún no se han registrado usuarios en el sistema.</p>
-                            @Html.ActionLink("Registrar el primer usuario", "CrearUsuario", null, new { @class = "btn btn-success" })
-                        </div>
-                    }
-                </div>
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #2c5aa0, #007bff);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 10px;
+        font-size: 14px;
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+    }
+
+    .user-name {
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 0;
+    }
+
+    .user-id {
+        color: #6c757d;
+        font-size: 0.85em;
+        margin: 0;
+    }
+
+    .label-farmacia {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.75em;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .label-admin {
+        background: linear-gradient(135deg, #dc3545, #c82333);
+        color: white;
+    }
+
+    .label-vendedor {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+    }
+
+    .label-contador {
+        background: linear-gradient(135deg, #17a2b8, #138496);
+        color: white;
+    }
+
+    .label-activo {
+        background: linear-gradient(135deg, #28a745, #1e7e34);
+        color: white;
+    }
+
+    .label-inactivo {
+        background: linear-gradient(135deg, #6c757d, #545b62);
+        color: white;
+    }
+
+    .btn-accion {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.8em;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        margin: 0 2px;
+        display: inline-block;
+    }
+
+    .btn-ver {
+        background-color: #17a2b8;
+        color: white;
+        border: 1px solid #17a2b8;
+    }
+
+        .btn-ver:hover {
+            background-color: #138496;
+            color: white;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+
+    .btn-editar {
+        background-color: #ffc107;
+        color: #212529;
+        border: 1px solid #ffc107;
+    }
+
+        .btn-editar:hover {
+            background-color: #e0a800;
+            color: #212529;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+    }
+
+    .empty-state-icon {
+        font-size: 4em;
+        color: #dee2e6;
+        margin-bottom: 20px;
+    }
+
+    .empty-state h3 {
+        color: #495057;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+    .empty-state p {
+        color: #6c757d;
+        font-size: 1.1em;
+        margin-bottom: 30px;
+    }
+
+    .stats-summary {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .stats-number {
+        font-size: 2em;
+        font-weight: 700;
+        color: #2c5aa0;
+        display: block;
+    }
+
+    .stats-label {
+        color: #6c757d;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .alert-custom {
+        border-radius: 10px;
+        border: none;
+        padding: 15px 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    }
+
+    .alert-success-custom {
+        background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        color: #155724;
+        border-left: 4px solid #28a745;
+    }
+
+    .alert-danger-custom {
+        background: linear-gradient(135deg, #f8d7da, #f1b0b7);
+        color: #721c24;
+        border-left: 4px solid #dc3545;
+    }
+
+    .alert-warning-custom {
+        background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+        color: #856404;
+        border-left: 4px solid #ffc107;
+    }
+
+    .alert-info-custom {
+        background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+        color: #0c5460;
+        border-left: 4px solid #17a2b8;
+    }
+
+    @@media (max-width: 768px) {
+        .page-title {
+            font-size: 2em;
+        }
+
+        .table-responsive {
+            border-radius: 10px;
+        }
+
+        .user-info {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-avatar {
+            margin-bottom: 5px;
+        }
+
+        .btn-accion {
+            margin-bottom: 5px;
+            display: block;
+            text-align: center;
+        }
+    }
+
+    .fade-in {
+        animation: fadeIn 0.6s ease-in;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+<!--
+<div class="usuarios-container">
+    <div class="page-header-custom">
+        <div class="container">
+            <h1 class="page-title">
+                <i class="fa fa-users"></i> Gestión de Usuarios
+            </h1>
+            <p class="page-subtitle">Administración del Personal de la Farmacia</p>
+        </div>
+    </div>
+    -->
+<div class="container">
+    @* Mostrar mensajes *@
+    @if (!string.IsNullOrEmpty(Model.Mensaje))
+    {
+        <div class="alert alert-@(Model.TipoMensaje == "success" ? "success" : Model.TipoMensaje == "error" ? "danger" : Model.TipoMensaje == "warning" ? "warning" : "info")-custom alert-dismissible fade-in" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <i class="fa fa-@(Model.TipoMensaje == "success" ? "check-circle" : Model.TipoMensaje == "error" ? "exclamation-circle" : Model.TipoMensaje == "warning" ? "exclamation-triangle" : "info-circle")"></i>
+            <strong>@(Model.TipoMensaje == "success" ? "¡Éxito!" : Model.TipoMensaje == "error" ? "¡Error!" : Model.TipoMensaje == "warning" ? "¡Atención!" : "Información")</strong>
+            @Model.Mensaje
+        </div>
+    }
+
+    <div class="control-panel fade-in">
+        <div class="row">
+            <div class="col-sm-6">
+                <h4 style="margin: 0; color: #2c5aa0; font-weight: 600;">
+                    <i class="fa fa-list-alt"></i> Panel de Control
+                </h4>
+                <p style="margin: 5px 0 0 0; color: #6c757d;">Gestiona el personal de tu farmacia</p>
+            </div>
+            <div class="col-sm-6 text-right">
+                <a href="/Usuarios/CrearUsuario" class="btn-nuevo-usuario">
+                    <i class="fa fa-plus-circle"></i> Nuevo Usuario
+                </a>
+            </div>
+            <div class="col-sm-12 text-right">
+                <a href="/Clientes/CrearCliente" class="btn-nuevo-cliente">
+                    <i class="fa fa-plus-circle"></i> Nuevo Cliente
+                </a>
             </div>
         </div>
     </div>
+
+    @if (Model.Usuarios != null && Model.Usuarios.Any())
+    {
+        <div class="usuarios-card fade-in">
+            <div class="card-header-custom">
+                <h4 class="card-title-custom">
+                    <i class="fa fa-users"></i> Lista de Usuarios del Sistema
+                </h4>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-custom">
+                    <thead>
+                        <tr>
+                            <th><i class="fa fa-user"></i> Usuario</th>
+                            <th><i class="fa fa-envelope"></i> Correo Electrónico</th>
+                            <th><i class="fa fa-user-tag"></i> Tipo</th>
+                            <th><i class="fa fa-toggle-on"></i> Estado</th>
+                            <th class="text-center"><i class="fa fa-cogs"></i> Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var usuario in Model.Usuarios)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="user-info">
+                                        <div class="user-avatar">
+                                            @(usuario.Nombre.Substring(0, 1).ToUpper())@(usuario.Apellidos.Substring(0, 1).ToUpper())
+                                        </div>
+                                        <div>
+                                            <p class="user-name">@usuario.NombreCompleto</p>
+                                            <p class="user-id">ID: @usuario.Identificacion</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="mailto:@usuario.Correo" style="color: #007bff; text-decoration: none;">
+                                        <i class="fa fa-envelope-o"></i> @usuario.Correo
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="label-farmacia @(usuario.TipoUsuarioDescripcion == "Administrador" ? "label-admin" : usuario.TipoUsuarioDescripcion == "Vendedor" ? "label-vendedor" : "label-contador")">
+                                        <i class="fa fa-@(usuario.TipoUsuarioDescripcion == "Administrador" ? "shield" : usuario.TipoUsuarioDescripcion == "Vendedor" ? "shopping-cart" : "calculator")"></i>
+                                        @usuario.TipoUsuarioDescripcion
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="label-farmacia @(usuario.EstadoDescripcion == "Activo" ? "label-activo" : "label-inactivo")">
+                                        <i class="fa fa-@(usuario.EstadoDescripcion == "Activo" ? "check-circle" : "ban")"></i>
+                                        @usuario.EstadoDescripcion
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="/Usuarios/DetallesUsuario/@usuario.Id_Usuario" class="btn-accion btn-ver" title="Ver detalles">
+                                            <i class="fa fa-eye"></i> Ver
+                                        </a>
+                                        <a href="/Usuarios/EditarUsuario/@usuario.Id_Usuario" class="btn-accion btn-editar" title="Editar usuario">
+                                            <i class="fa fa-edit"></i> Editar
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="stats-summary">
+                <div class="row">
+                    <div class="col-md-3 col-sm-6">
+                        <span class="stats-number">@Model.Usuarios.Count</span>
+                        <span class="stats-label">Total Usuarios</span>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <span class="stats-number">@Model.Usuarios.Count(u => u.EstadoDescripcion == "Activo")</span>
+                        <span class="stats-label">Activos</span>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <span class="stats-number">@Model.Usuarios.Count(u => u.TipoUsuarioDescripcion == "Cliente")</span>
+                        <span class="stats-label">Clientes</span>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <span class="stats-number">@Model.Usuarios.Count(u => u.TipoUsuarioDescripcion == "Vendedor")</span>
+                        <span class="stats-label">Vendedores</span>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <span class="stats-number">@Model.Usuarios.Count(u => u.TipoUsuarioDescripcion == "Contabilidad")</span>
+                        <span class="stats-label">Contabilidad</span>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <span class="stats-number">@Model.Usuarios.Count(u => u.TipoUsuarioDescripcion == "Administrador")</span>
+                        <span class="stats-label">Administradores</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state fade-in">
+            <div class="empty-state-icon">
+                <i class="fa fa-users"></i>
+            </div>
+            <h3>No hay usuarios registrados</h3>
+            <p>
+                Aún no se han registrado usuarios en el sistema de la farmacia.<br>
+                Comienza creando el primer usuario para empezar a gestionar tu equipo.
+            </p>
+            <a href="/Usuarios/CrearUsuario" class="btn-nuevo-usuario">
+                <i class="fa fa-user-plus"></i> Registrar Primer Usuario
+            </a>
+        </div>
+    }
+</div>
 </div>
 
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            // Auto-ocultar las alertas después de 5 segundos
-            setTimeout(function () {
-                $('.alert').fadeOut('slow');
-            }, 5000);
+<script>
+    $(document).ready(function () {
+        // Auto-ocultar las alertas después de 6 segundos
+        setTimeout(function () {
+            $('.alert-custom').fadeOut('slow');
+        }, 6000);
 
-            // Tooltip para los botones
-            $('[title]').tooltip();
+        // Tooltip para los botones
+        $('[title]').tooltip();
+
+        // Efecto de hover mejorado para las filas
+        $('.table-custom tbody tr').hover(
+            function () {
+                $(this).find('.btn-accion').addClass('btn-hover-effect');
+            },
+            function () {
+                $(this).find('.btn-accion').removeClass('btn-hover-effect');
+            }
+        );
+
+        // Animación de entrada escalonada
+        $('.fade-in').each(function (index) {
+            $(this).css('animation-delay', (index * 0.1) + 's');
         });
-    </script>
-}
+
+        // Contador animado para las estadísticas
+        $('.stats-number').each(function () {
+            var $this = $(this);
+            var countTo = $this.text();
+
+            if (!isNaN(countTo) && countTo !== '') {
+                $({ countNum: 0 }).animate({
+                    countNum: countTo
+                }, {
+                    duration: 2000,
+                    easing: 'linear',
+                    step: function () {
+                        $this.text(Math.floor(this.countNum));
+                    },
+                    complete: function () {
+                        $this.text(this.countNum);
+                    }
+                });
+            }
+        });
+    });
+</script>

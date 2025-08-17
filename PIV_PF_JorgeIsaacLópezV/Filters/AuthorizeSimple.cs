@@ -14,7 +14,7 @@ namespace PIV_PF_JorgeIsaacLópezV.Filters
             if (filterContext.HttpContext.Session["Id_Usuario"] == null)
             {
                 
-                filterContext.Result = new RedirectResult("~/Login");
+                filterContext.Result = new RedirectResult("~/Login/Login");
                 return;
             }
 
@@ -29,7 +29,7 @@ namespace PIV_PF_JorgeIsaacLópezV.Filters
             
             if (filterContext.HttpContext.Session["Id_Usuario"] == null)
             {
-                filterContext.Result = new RedirectResult("~/Login");
+                filterContext.Result = new RedirectResult("~/Login/Login");
                 return;
             }
 

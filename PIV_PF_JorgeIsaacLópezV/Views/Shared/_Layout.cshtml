@@ -1,42 +1,604 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - LA FARMACIA</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    <title>@ViewBag.Title - LA FARMACIA - Dashboard</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #2c5aa0;
+            --secondary-color: #34c759;
+            --accent-color: #007bff;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --success-color: #28a745;
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #6c757d;
+            --border-light: #e9ecef;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Navbar Farmacia */
+        .navbar-farmacia {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1e3a5f 100%);
+            border: none;
+            box-shadow: 0 2px 20px rgba(44, 90, 160, 0.15);
+            min-height: 60px;
+            border-radius: 0;
+            padding: 0;
+            margin: 10px
+        }
+
+            .navbar-farmacia .navbar-brand {
+                color: white !important;
+                font-weight: 700;
+                font-size: 20px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                padding: 15px 20px;
+                margin-right: 30px;
+            }
+
+                .navbar-farmacia .navbar-brand:hover {
+                    color: var(--secondary-color) !important;
+                    transform: scale(1.02);
+                    transition: all 0.3s ease;
+                }
+
+            .navbar-farmacia .navbar-nav {
+                display: flex;
+                flex-direction: row;
+                align-items:center;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+
+                .navbar-farmacia .navbar-nav .nav-item {
+                    margin: 0;
+                }
+
+                .navbar-farmacia .navbar-nav .nav-link {
+                    color: rgba(255, 255, 255, 0.9) !important;
+                    font-weight: 500;
+                    padding: 20px 25px !important;
+                    transition: all 0.3s ease;
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    text-decoration: none;
+                    border: none;
+                    background: none;
+                }
+
+                    .navbar-farmacia .navbar-nav .nav-link:hover {
+                        color: white !important;
+                        background-color: rgba(255, 255, 255, 0.1);
+                        transform: translateY(-2px);
+                    }
+
+                    .navbar-farmacia .navbar-nav .nav-link:before {
+                        content: '';
+                        position: absolute;
+                        bottom: 0;
+                        left: 50%;
+                        width: 0;
+                        height: 3px;
+                        background-color: var(--secondary-color);
+                        transition: all 0.3s ease;
+                        transform: translateX(-50%);
+                    }
+
+                    .navbar-farmacia .navbar-nav .nav-link:hover:before {
+                        width: 80%;
+                    }
+
+                    .navbar-farmacia .navbar-nav .nav-link.active {
+                        color: white !important;
+                        background-color: rgba(255, 255, 255, 0.15);
+                    }
+
+                    .navbar-farmacia .navbar-nav .nav-link.active:before {
+                            width: 80%;
+                    }
+
+
+                    .navbar-farmacia .navbar-nav .nav-link i {
+                        margin-right: 8px;
+                        font-size: 16px;
+                    }
+
+        .navbar-user {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+            .user-dropdown .dropdown-toggle {
+                color: rgba(255, 255, 255, 0.9) !important;
+                font-weight: 500;
+                padding: 15px 20px !important;
+                transition: all 0.3s ease;
+                border: none;
+                background: none;
+                cursor: pointer;
+            }
+
+                .user-dropdown .dropdown-toggle:hover {
+                    color: white !important;
+                    background-color: rgba(255, 255, 255, 0.1);
+                }
+
+            .user-dropdown .dropdown-menu {
+                background: white;
+                border: none;
+                box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+                border-radius: 8px;
+                margin-top: 5px;
+                min-width: 200px;
+            }
+
+            .user-dropdown .dropdown-item {
+                padding: 12px 20px;
+                color: var(--text-dark);
+                transition: all 0.3s ease;
+            }
+
+                .user-dropdown .dropdown-item:hover {
+                    background-color: var(--light-bg);
+                    color: var(--primary-color);
+                }
+
+
+            @@media (max-width: 768px) {
+            .navbar-farmacia .navbar-nav {
+                flex-direction: column;
+                width: 100%;
+                background-color: rgba(0, 0, 0, 0.1);
+                margin-top: 10px;
+            }
+
+            .navbar-farmacia .navbar-nav .nav-link {
+                padding: 15px 20px !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .navbar-user {
+                margin-left: 0;
+                width: 100%;
+                justify-content: center;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                margin-top: 10px;
+                padding-top: 10px;
+            }
+        }
+
+        /* Header Dashboard */
+        .dashboard-header {
+            background: linear-gradient(135deg, white 0%, var(--light-bg) 100%);
+            padding: 15px 0;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .dashboard-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.5em;
+            margin: 0;
+            text-align: center;
+        }
+
+        .dashboard-subtitle {
+            color: var(--text-muted);
+            text-align: center;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+
+        /* Cards Dashboard */
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+            border: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .stats-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            }
+
+            .stats-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            }
+
+            .stats-card .card-icon {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                color: white;
+                margin-bottom: 15px;
+                background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            }
+
+            .stats-card h3 {
+                color: var(--text-dark);
+                font-weight: 600;
+                font-size: 1.2em;
+                margin-bottom: 5px;
+            }
+
+            .stats-card .card-description {
+                color: var(--text-muted);
+                font-size: 0.9em;
+            }
+
+        /* Action Cards */
+        .action-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+            border: none;
+            transition: all 0.3s ease;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .action-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+            }
+
+            .action-card .action-icon {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 32px;
+                color: white;
+                margin: 0 auto 20px;
+                background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            }
+
+            .action-card.users .action-icon {
+                background: linear-gradient(135deg, #007bff, #0056b3);
+            }
+
+            .action-card.clients .action-icon {
+                background: linear-gradient(135deg, #28a745, #1e7e34);
+            }
+
+            .action-card h4 {
+                color: var(--text-dark);
+                font-weight: 600;
+                font-size: 1.3em;
+                margin-bottom: 10px;
+            }
+
+            .action-card p {
+                color: var(--text-muted);
+                margin-bottom: 20px;
+                font-size: 0.95em;
+            }
+
+        .btn-action {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+            .btn-action:hover {
+                color: white;
+                text-decoration: none;
+                transform: scale(1.05);
+                box-shadow: 0 5px 20px rgba(44, 90, 160, 0.3);
+            }
+
+            .btn-action.success {
+                background: linear-gradient(135deg, var(--success-color), #1e7e34);
+            }
+
+                .btn-action.success:hover {
+                    box-shadow: 0 5px 20px rgba(40, 167, 69, 0.3);
+                }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 50px;
+            border-top: 4px solid var(--primary-color);
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: linear-gradient(135deg, white 0%, #f1f8ff 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--primary-color);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        }
+
+            .welcome-section h3 {
+                color: var(--primary-color);
+                margin-bottom: 15px;
+                font-weight: 600;
+            }
+
+            .welcome-section .user-role {
+                background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+                color: white;
+                padding: 5px 15px;
+                border-radius: 20px;
+                font-size: 0.9em;
+                font-weight: 500;
+                display: inline-block;
+            }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .dashboard-title {
+                font-size: 2em;
+            }
+
+            .stats-card, .action-card {
+                margin-bottom: 20px;
+            }
+
+            .navbar-farmacia .navbar-nav > li > a {
+                padding: 15px 20px !important;
+            }
+        }
+
+        /* Animations */
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            margin-bottom: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 15px;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Content Area */
+        .content-area {
+            min-height: 500px;
+            margin-bottom: 30px;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
-        <div class="container">
-            @Html.ActionLink("Nombre de la aplicación", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Alternar navegación" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+    <nav class="navbar navbar-expand-lg navbar-farmacia">
+        <div class="container-fluid">
+            <!-- Brand -->
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-pills"></i> LA FARMACIA
+            </a>
+
+            <!-- Toggle button para móvil -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span style="color: white;"><i class="fas fa-bars"></i></span>
             </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Inicio", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Acerca de", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Contacto", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Administracion", "Index", "Usuarios", new { area = "" }, new { @class = "nav-link" })</li>
+
+            <!-- Menu items -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/Usuarios">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Usuarios">
+                            <i class="fas fa-users"></i> Usuarios
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Clientes/Index">
+                            <i class="fas fa-user-friends"></i> Clientes
+                        </a>
+                    </li>
                 </ul>
+
+
+                <!--<div class="navbar-user">
+        <div class="user-dropdown">
+            <button class="dropdown-toggle" type="button" data-toggle="dropdown">
+                <i class="fas fa-user-circle"></i> Usuario
+                <i class="fas fa-chevron-down ml-1"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="">
+                    <i class="fas fa-cog"></i> Configuración
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/Logout">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </a>
+            </div>
+        </div>-->
+            </div>
             </div>
         </div>
     </nav>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - LA FARMACIA</p>
-        </footer>
+
+    <!--
+    <nav class="navbar navbar-farmacia navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#farmacia-navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">
+                    <i class="fa fa-heartbeat"></i> LA FARMACIA
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="farmacia-navbar">
+                <ul class="navbar-nav navbar-right">
+                    <li><a href="/"><i class="fa fa-home"></i> Dashboard</a></li>
+                    <li><a href="/Usuarios"><i class="fa fa-users"></i> Usuarios</a></li>
+                    <li><a href="#" class="disabled"><i class="fa fa-user-circle"></i> Clientes</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-user"></i> Usuario <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#"><i class="fa fa-cog"></i> Configuración</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#"><i class="fa fa-sign-out"></i> Cerrar Sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav> -->
+    <!--
+    <div style="margin-top: 70px;">
+        <div class="dashboard-header">
+            <div class="container">
+                <h1 class="dashboard-title">
+                    <i class="fa fa-heartbeat"></i> Dashboard Administrativo
+                </h1>
+                <p class="dashboard-subtitle">Sistema de Gestión Farmacéutica</p>
+            </div>
+        </div>
+        -->
+    <div class="container">
+        <!-- AQUÍ SE RENDERIZA EL CONTENIDO DE CADA VISTA -->
+        <div class="content-area">
+            @RenderBody()
+        </div>
     </div>
 
-    <script src="https://website-widgets.pages.dev/dist/sienna.min.js" defer></script>
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+    <footer>
+        <div class="container">
+            <p>&copy; @DateTime.Now.Year LA FARMACIA - PROYECTO PROGRAMACION IV. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Smooth scrolling for anchor links
+            $('a[href^="#"]').on('click', function (event) {
+                var target = $(this.getAttribute('href'));
+                if (target.length) {
+                    event.preventDefault();
+                    $('html, body').stop().animate({
+                        scrollTop: target.offset().top - 100
+                    }, 1000);
+                }
+            });
+
+            // Add animation delay to cards
+            $('.fade-in-up').each(function (index) {
+                $(this).css('animation-delay', (index * 0.1) + 's');
+            });
+
+            // Navbar background change on scroll
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 50) {
+                    $('.navbar-farmacia').addClass('navbar-scrolled');
+                } else {
+                    $('.navbar-farmacia').removeClass('navbar-scrolled');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
